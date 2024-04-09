@@ -1,0 +1,53 @@
+<!--
+  Authors : cosonas (Rahul Jograna)
+  Website : https://cosonas.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://cosonas.com/license
+  Copyright and Good Faith Purchasers © 2022-present cosonas.
+ -->
+<div class="main" [ngStyle]="{ 'background-image': 'url(assets/default.jpg)' }">
+  <div class="cover black" data-color="black"></div>
+
+  <div class="coming-container">
+    <h1 class="logo cursive">Bunitas will soon be ready</h1>
+    <!--  H1 can have 2 designs: "logo" and "logo cursive"           -->
+
+    <div class="content">
+      <h4 class="motto">We're adding some beauties in the community</h4>
+    </div>
+    <div class="timer">
+      <div class="time-unit">
+        <span>{{ days }}</span>
+        <p>Days</p>
+      </div>
+      <div class="time-unit">
+        <span>{{ hours }}</span>
+        <p>Hours</p>
+      </div>
+      <div class="time-unit">
+        <span>{{ minutes }}</span>
+        <p>Minutes</p>
+      </div>
+      <div class="time-unit">
+        <span>{{ seconds }}</span>
+        <p>Seconds</p>
+      </div>
+    </div>
+
+    <div class="newsletter-form">
+      <form #myForm="ngForm" (ngSubmit)="onSubmit(myForm.value)">
+        <input
+          type="text"
+          class="new-text"
+          id="email"
+          name="email"
+          placeholder="Enter your email address...."
+          ngModel
+          required
+        />
+        <button type="submit" class="new-btn">Join NOW</button>
+      </form>
+    </div>
+  </div>
+</div>

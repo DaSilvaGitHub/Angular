@@ -1,0 +1,1896 @@
+<!--
+  Authors : cosonas (Rahul Jograna)
+  Website : https://cosonas.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://cosonas.com/license
+  Copyright and Good Faith Purchasers © 2022-present cosonas.
+ -->
+
+<div #topScrollAnchor></div>
+<div
+  class="progress"
+  *ngIf="loading == true"
+  style="
+    z-index: 999999;
+    position: absolute;
+    top: 0px;
+    height: 10px;
+    width: 100%;
+  "
+>
+  <div
+    class="progress-bar"
+    role="progressbar"
+    [ngStyle]="{ width: loadingWidth + '%' }"
+    aria-valuemax="100"
+  ></div>
+</div>
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div id="sign-in-button"></div>
+<div
+  mdbModal
+  #basicModal="mdbModal"
+  class="modal fade bottom"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 99999"
+  [config]="{ backdrop: true, ignoreBackdropClick: true }"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="closeModal()"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">{{ name }}</h4>
+      </div>
+      <div class="modal-body">
+        <div
+          *ngIf="!loaded"
+          style="
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <div class="spinner-border text-success" role="status">
+            <span class="sr-only">{{ util.translate("Loading...") }}</span>
+          </div>
+        </div>
+        <div class="main_content_div" #scrollMe>
+          <span *ngFor="let item of messages">
+            <div class="left_div" *ngIf="item.from_id != uid_chat">
+              <div class="inner_div">
+                <div class="msg_div">
+                  <p>{{ item.message }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="right_div" *ngIf="item.from_id == uid_chat">
+              <div class="inner_div">
+                <div class="msg_div">
+                  <p>{{ item.message }}</p>
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+        <div
+          *ngIf="!yourMessage && loaded"
+          style="display: flex; flex-direction: row-reverse; padding: 20px"
+        >
+          <div class="spinner-border text-success" role="status">
+            <span class="sr-only">{{ util.translate("Loading...") }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div style="width: 100%">
+          <div class="md-form">
+            <textarea
+              type="text"
+              [(ngModel)]="msg"
+              id="form8"
+              class="md-textarea form-control"
+              rows="1"
+              mdbInput
+              mdbValidate
+            ></textarea>
+            <label for="form8"> {{ util.translate("Type Here..") }} </label>
+          </div>
+        </div>
+        <div>
+          <button
+            type="button"
+            mdbBtn
+            color="secondary"
+            class="waves-light"
+            aria-label="Close"
+            (click)="closeModal()"
+            mdbWavesEffect
+          >
+            {{ util.translate("Close") }}
+          </button>
+          <button
+            type="button"
+            mdbBtn
+            color="primary"
+            (click)="sendMessage()"
+            class="relative waves-light"
+            mdbWavesEffect
+          >
+            {{ util.translate("Send Message") }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  mdbModal
+  #locationModal="mdbModal"
+  class="modal fade left"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-full-height modal-left" role="document">
+    <div class="modal-content">
+      <div class="modal-body location_body">
+        <div>
+          <div style="display: flex; justify-content: space-between">
+            <img
+              src="assets/imgs/cancel.png"
+              style="width: 20px; height: 20px"
+              (click)="locationModal.hide()"
+            />
+            <a (click)="removeLocation()">
+              <img src="assets/imgs/placeholder.png" style="width: 20px" />
+              Clear
+            </a>
+          </div>
+
+          <div class="form_div">
+            <input
+              type="text"
+              [(ngModel)]="autocomplete1"
+              [placeholder]="util.translate('Browse by City')"
+              (ngModelChange)="onSearchChange($event)"
+              class="form-control"
+            />
+            <div
+              class="location_list"
+              *ngIf="autocompleteLocationItems.length > 0"
+            >
+              <div
+                class="location_name"
+                *ngFor="let item of autocompleteLocationItems"
+                (click)="selectSearchResult1(item)"
+              >
+                <mdb-icon
+                  fas
+                  icon="map-marker-alt"
+                  style="color: gray; margin-right: 10px"
+                ></mdb-icon>
+                {{ item.description }}
+              </div>
+            </div>
+
+            <div class="location_box">
+              <div>
+                <img src="assets/imgs/aim.png" class="icn_img" />
+              </div>
+              <div style="padding-left: 16px" (click)="locate(locationModal)">
+                <label class="bold_lbl">{{
+                  util.translate("Get current location")
+                }}</label>
+                <label class="grey_lbl">{{
+                  util.translate("Using GPS")
+                }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #sideMenu="mdbModal"
+  class="modal fade right"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div
+    class="sidemenu modal-dialog modal-full-height modal-right"
+    role="document"
+    style="margin: 0px; padding: 0px; height: 100%"
+  >
+    <div class="modal-content">
+      <div class="modal-body location_body">
+        <div>
+          <img
+            src="assets/imgs/cancel.png"
+            style="width: 20px"
+            (click)="sideMenu.hide()"
+          />
+          <div class="form_div">
+            <div class="menu_actions">
+              <div class="div">
+                <div class="app_btns" mdbWavesEffect (click)="onPage('home')">
+                  <label
+                    [ngStyle]="{
+                      color: currentPath == 'home' ? '#9c0278' : ''
+                    }"
+                  >
+                    {{ util.translate("Home") }}
+                  </label>
+                </div>
+                <div class="app_btns" mdbWavesEffect (click)="onPage('shop')">
+                  <label
+                    [ngStyle]="{
+                      color: currentPath == 'shop' ? '#9c0278' : ''
+                    }"
+                    >{{ util.translate("Shop") }}
+                  </label>
+                </div>
+                <!-- *ngIf="haveSigned()" -->
+
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  *ngIf="haveSigned() == false"
+                  (click)="sideMenu.hide(); loginModal.show()"
+                  [ngStyle]="{
+                    color: currentPath == 'Card' ? '#9c0278' : ''
+                  }"
+                >
+                  <label>{{ util.translate("Login") }} </label>
+                </div>
+
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  *ngIf="haveSigned() == false"
+                  (click)="sideMenu.hide(); util.publishModalPopup('register')"
+                >
+                  <label>{{ util.translate("Signup") }} </label>
+                </div>
+
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  (click)="onProfile('partner')"
+                >
+                  <label
+                    [ngStyle]="{
+                      color: currentPath == 'partner' ? '#9c0278' : ''
+                    }"
+                    >{{ util.translate("For Partner") }}
+                  </label>
+                </div>
+                <!-- *ngIf="haveSigned()" -->
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  *ngIf="haveSigned()"
+                  [ngStyle]="{
+                    color: currentPath == 'notifications' ? '#9c0278' : ''
+                  }"
+                  (click)="onProfile('notifications')"
+                >
+                  <label>{{ util.translate("Notifications") }} </label>
+                </div>
+                <!-- *ngIf="haveSigned()" -->
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  (click)="onProfile('Card')"
+                  *ngIf="haveSigned()"
+                  [ngStyle]="{
+                    color: currentPath == 'Card' ? '#9c0278' : ''
+                  }"
+                >
+                  <label>{{ util.translate("Cart") }} </label>
+                </div>
+                <!-- * -->
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  (click)="onProfile('Card')"
+                  *ngIf="haveSigned()"
+                  [ngStyle]="{
+                    color: currentPath == 'Card' ? '#9c0278' : ''
+                  }"
+                >
+                  <label>{{ util.translate("Account") }} </label>
+                </div>
+                <!-- -->
+
+                <!--  -->
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  *ngIf="haveSigned()"
+                  (click)="
+                    sideMenu.hide(); util.publishModalPopup('registerJoin')
+                  "
+                >
+                  <label>{{ util.translate("Join as Partner") }} </label>
+                </div>
+
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  (click)="onProfile('address')"
+                >
+                  <label *ngIf="haveSigned()">
+                    {{ util.translate("Address") }}
+                  </label>
+                </div>
+                <!-- <div class="app_btns" mdbWavesEffect (click)="languageClicked = !languageClicked">
+              <mdb-icon fas icon="language"></mdb-icon>
+              <label>{{util.translate('Language')}} </label>
+            </div>
+            <div *ngIf="languageClicked">
+              <div *ngFor="let item of util.allLanguages" class="langs" mdbWavesEffect (click)="changeLanguage(item)">
+                <label>{{item.name}} </label>
+              </div>
+            </div>
+            <div class="app_btns" mdbWavesEffect (click)="onPage('contact')">
+              <mdb-icon fas icon="envelope"></mdb-icon>
+              <label>{{util.translate('Contact Us')}} </label>
+            </div>
+            <div class="app_btns" mdbWavesEffect (click)="onPage('about')">
+              <mdb-icon fas icon="info-circle"></mdb-icon>
+              <label>{{util.translate('About')}} </label>
+            </div>
+            <div class="app_btns" mdbWavesEffect (click)="onPage('faq')">
+              <mdb-icon fas icon="question-circle"></mdb-icon>
+              <label>{{util.translate('FAQs')}} </label>
+            </div>
+            <div class="app_btns" mdbWavesEffect (click)="onPage('help')">
+              <mdb-icon fas icon="question"></mdb-icon>
+              <label>{{util.translate('Help')}} </label>
+            </div> -->
+                <div
+                  class="app_btns"
+                  mdbWavesEffect
+                  (click)="logout()"
+                  *ngIf="haveSigned()"
+                >
+                  <mdb-icon fas icon="sign-out-alt"></mdb-icon>
+                  <label>{{ util.translate("Logout") }} </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #loginModal="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog" role="document">
+    <!-- Login with email and password -->
+    <form
+      #loginForm="ngForm"
+      novalidate
+      *ngIf="util.user_login == '0' || util.user_login == 0"
+    >
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">
+            {{ util.translate("Login") }}
+          </h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="loginModal.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body location_body">
+          <div class="form_div">
+            <input
+              type="email"
+              [placeholder]="util.translate('Email')"
+              [(ngModel)]="login.email"
+              [ngModelOptions]="{ standalone: true }"
+              class="form-control frm"
+              name="email"
+              #email="ngModel"
+              spellcheck="false"
+              autocapitalize="off"
+              required
+            />
+            <p [hidden]="email.valid || submitted == false" class="redAlert">
+              {{ util.translate("Email is required") }}
+            </p>
+            <input
+              type="password"
+              [(ngModel)]="login.password"
+              [ngModelOptions]="{ standalone: true }"
+              name="password"
+              [placeholder]="util.translate('Password')"
+              type="password"
+              #password="ngModel"
+              required
+              class="form-control frm"
+            />
+            <p [hidden]="password.valid || submitted == false" class="redAlert">
+              {{ util.translate("Password is required") }}
+            </p>
+          </div>
+          <p class="frg" (click)="loginModal.hide(); forgotPwd.show()">
+            {{ util.translate("Forgot Password?") }}
+          </p>
+          <p class="creatAc" (click)="loginModal.hide(); registerModal.show()">
+            {{ util.translate("or") }}
+            <span class="colored">
+              {{ util.translate("create an account") }}</span
+            >
+          </p>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            mdbBtn
+            color="default"
+            class="waves-light"
+            [disabled]="isLogin"
+            style="background-color: #9c0278 !important"
+            (click)="loginWithEmailPassword(loginForm, loginModal)"
+            mdbWavesEffect
+          >
+            <span *ngIf="!isLogin"> {{ util.translate("Login") }}</span>
+            <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- end of Login with email and password -->
+
+    <!-- Login with mobile and password -->
+    <form
+      #loginForm="ngForm"
+      novalidate
+      *ngIf="util.user_login == '1' || util.user_login == 1"
+    >
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">
+            {{ util.translate("Login") }}
+          </h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="loginModal.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body location_body">
+          <div class="form_div">
+            <div class="row">
+              <div
+                class="col-3"
+                style="display: flex; flex-direction: row; align-items: center"
+              >
+                <select
+                  [(ngModel)]="mobile.ccCode"
+                  type="text"
+                  name="ccode"
+                  #ccode="ngModel"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  required
+                  style="border: 1px solid lightgray; width: 100%"
+                >
+                  <option
+                    *ngFor="let item of util.countrys"
+                    [value]="item.dialling_code"
+                  >
+                    +{{ item.dialling_code }}
+                    {{ item.country_name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-9">
+                <input
+                  [(ngModel)]="mobile.phone"
+                  type="number"
+                  [placeholder]="util.translate('Mobile Number')"
+                  name="mobile"
+                  #phone="ngModel"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  required
+                  class="form-control frm"
+                />
+                <p
+                  [hidden]="phone.valid || submitted == false"
+                  class="redAlert"
+                >
+                  {{ util.translate("Phone number is required") }}
+                </p>
+              </div>
+            </div>
+            <input
+              name="password"
+              [placeholder]="util.translate('Password')"
+              type="password"
+              #password="ngModel"
+              required
+              [(ngModel)]="mobile.password"
+              class="form-control frm"
+              [ngModelOptions]="{ standalone: true }"
+            />
+            <p [hidden]="password.valid || submitted == false" class="redAlert">
+              {{ util.translate("Password is required") }}
+            </p>
+          </div>
+          <p class="frg" (click)="loginModal.hide(); forgotPwd.show()">
+            {{ util.translate("Forgot Password?") }}
+          </p>
+          <p class="creatAc" (click)="loginModal.hide(); registerModal.show()">
+            {{ util.translate("or") }}
+            <span class="colored">
+              {{ util.translate("create an account") }}</span
+            >
+          </p>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            mdbBtn
+            color="default"
+            class="waves-light"
+            [disabled]="isLogin"
+            (click)="loginWithMobileAndPassword(loginForm, loginModal)"
+            mdbWavesEffect
+          >
+            <span *ngIf="!isLogin"> {{ util.translate("Login") }}</span>
+            <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+    <!--End Of Login with mobile and password -->
+    <form
+      #loginForm="ngForm"
+      novalidate
+      *ngIf="util.user_login == '2' || util.user_login == 2"
+    >
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">
+            {{ util.translate("Login") }}
+          </h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="loginModal.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body location_body">
+          <div class="form_div">
+            <div class="row">
+              <div
+                class="col-3"
+                style="display: flex; flex-direction: row; align-items: center"
+              >
+                <select
+                  [(ngModel)]="mobileLogin.ccCode"
+                  type="text"
+                  name="ccode"
+                  #ccode="ngModel"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  required
+                  style="border: 1px solid lightgray; width: 100%"
+                >
+                  <option
+                    *ngFor="let item of util.countrys"
+                    [value]="item.dialling_code"
+                  >
+                    +{{ item.dialling_code }}
+                    {{ item.country_name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col-9">
+                <input
+                  [(ngModel)]="mobileLogin.phone"
+                  type="number"
+                  [placeholder]="util.translate('Mobile Number')"
+                  name="mobile"
+                  #phone="ngModel"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  required
+                  class="form-control frm"
+                />
+                <p
+                  [hidden]="phone.valid || submitted == false"
+                  class="redAlert"
+                >
+                  {{ util.translate("Phone number is required") }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="frg" (click)="loginModal.hide(); forgotPwd.show()">
+            {{ util.translate("Forgot Password?") }}
+          </p>
+          <p class="creatAc" (click)="loginModal.hide(); registerModal.show()">
+            {{ util.translate("or") }}
+            <span class="colored">
+              {{ util.translate("create an account") }}</span
+            >
+          </p>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            mdbBtn
+            color="default"
+            class="waves-light"
+            [disabled]="isLogin"
+            (click)="loginWithMobileAndOTP(loginForm, loginModal)"
+            mdbWavesEffect
+          >
+            <span *ngIf="!isLogin"> {{ util.translate("Login") }}</span>
+            <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #firebaseOTP="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Verify Mobile") }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="firebaseOTP.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div>
+          <p class="subTitleText">
+            {{ util.translate("We texted you a code to verify") }} <br />
+            {{ util.translate("your phone") }} +{{ this.mobileLogin.ccCode }}
+            {{ this.mobileLogin.phone }}
+          </p>
+          <div class="otpInput">
+            <ng-otp-input
+              (onInputChange)="onOtpChangeFirebase($event)"
+              [config]="{
+                length: 6,
+                inputStyles: {
+                  width: '30px !important',
+                  height: '30px !important'
+                }
+              }"
+            >
+            </ng-otp-input>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          [disabled]="isLogin"
+          mdbWavesEffect
+          (click)="onVerifyOTPFirebase()"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Continue") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #firebaseOTPRegister="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Verify Mobile") }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="firebaseOTPRegister.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div>
+          <p class="subTitleText">
+            {{ util.translate("We texted you a code to verify") }} <br />
+            {{ util.translate("your phone") }} +{{ this.registerForm.cc }}
+            {{ this.registerForm.mobile }}
+          </p>
+          <div class="otpInput">
+            <ng-otp-input
+              (onInputChange)="onOtpChangeFirebase($event)"
+              [config]="{
+                length: 6,
+                inputStyles: {
+                  width: '30px !important',
+                  height: '30px !important'
+                }
+              }"
+            >
+            </ng-otp-input>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          [disabled]="isLogin"
+          mdbWavesEffect
+          (click)="verifyRegisterFirebaseOTP()"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Continue") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #registerModal="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <form #loginForm="ngForm" novalidate>
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">
+            {{ util.translate("Customer Registration") }}
+          </h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="registerModal.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body location_body">
+          <div>
+            <div class="form_div">
+              <input
+                type="email"
+                [placeholder]="util.translate('Email')"
+                name="email"
+                #email="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                [(ngModel)]="registerForm.email"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p [hidden]="email.valid || submitted == false" class="redAlert">
+                {{ util.translate("Email is required") }}
+              </p>
+              <input
+                name="password"
+                [placeholder]="util.translate('Password')"
+                type="password"
+                #password="ngModel"
+                required
+                [(ngModel)]="registerForm.password"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p
+                [hidden]="password.valid || submitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Password is required") }}
+              </p>
+              <input
+                [(ngModel)]="registerForm.first_name"
+                type="text"
+                [placeholder]="util.translate('First Name')"
+                name="full_name"
+                #full_name="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                [ngModelOptions]="{ standalone: true }"
+                class="form-control frm"
+              />
+              <p
+                [hidden]="full_name.valid || submitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("First Name is required") }}
+              </p>
+              <input
+                type="text"
+                [placeholder]="util.translate('Last Name')"
+                [(ngModel)]="registerForm.last_name"
+                name="lname"
+                #lname="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                [ngModelOptions]="{ standalone: true }"
+                class="form-control frm"
+              />
+              <p [hidden]="lname.valid || submitted == false" class="redAlert">
+                {{ util.translate("Last Name is required") }}
+              </p>
+              <input
+                type="date"
+                [(ngModel)]="registerForm.dob"
+                name="dob"
+                #dob="ngModel"
+                autocomplete="cc-exp"
+                ccExp
+                [ngModelOptions]="{ standalone: true }"
+                mdbInput
+                class="form-control frm"
+                required
+              />
+              <p [hidden]="dob.valid || submitted == false" class="redAlert">
+                {{ util.translate("Dob Date is required") }}
+              </p>
+
+              <select
+                [(ngModel)]="registerForm.gender"
+                required
+                style="border: 1px solid lightgray; width: 100%"
+                [ngModelOptions]="{ standalone: true }"
+              >
+                <option value="1">{{ util.translate("Male") }}</option>
+                <option value="0">{{ util.translate("Female") }}</option>
+                <option value="2">{{ util.translate("Others") }}</option>
+              </select>
+              <div class="row">
+                <div
+                  class="col-3"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                  "
+                >
+                  <select
+                    [(ngModel)]="registerForm.cc"
+                    type="text"
+                    name="ccode"
+                    #ccode="ngModel"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    required
+                    style="border: 1px solid lightgray; width: 100%"
+                  >
+                    <option
+                      *ngFor="let item of util.countrys"
+                      [value]="item.dialling_code"
+                    >
+                      +{{ item.dialling_code }}
+                      {{ item.country_name }}
+                    </option>
+                    <option [value]="+44">+44 United Kingdom</option>
+                  </select>
+                </div>
+                <div class="col-9">
+                  <input
+                    [(ngModel)]="registerForm.mobile"
+                    type="number"
+                    [placeholder]="util.translate('Mobile Number')"
+                    name="mobile"
+                    #phone="ngModel"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    required
+                    class="form-control frm"
+                    (keydown)="handleKeyDown($event)"
+                    min="1000000000"
+                    max="9999999999"
+                  />
+                  <p
+                    [hidden]="phone.valid || submitted == false"
+                    class="redAlert"
+                  >
+                    {{ util.translate("Phone number is required") }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- <label>{{util.translate('Location/City')}} <span style="color: red;">*</span> </label> -->
+              <select
+                [(ngModel)]="registerForm.location"
+                required
+                style="border: 1px solid lightgray; width: 100%"
+                [ngModelOptions]="{ standalone: true }"
+                #location="ngModel"
+              >
+                <option *ngFor="let item of util.cities" [value]="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+              <p
+                [hidden]="location.valid || submitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Location/City is required") }}
+              </p>
+              <input
+                type="text"
+                [placeholder]="util.translate('Referral Code(optional)')"
+                [(ngModel)]="registerForm.referral"
+                name="referral"
+                #referral="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                [ngModelOptions]="{ standalone: true }"
+                class="form-control frm"
+              />
+              <div style="margin: 10px 20px; font-size: 10px; height: 14px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkTermsAndCondition"
+                  [(ngModel)]="registerForm.checkTermsAndCondition"
+                  name="checkls"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I've read and accepted the Terms & conditions
+                      <span style="color: red">*</span></span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+              <div style="margin: 10px 20px; font-size: 10px; height: 14px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkAge"
+                  [(ngModel)]="registerForm.checkAge"
+                  name="checkls1"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I am over 18 years old
+                      <span style="color: red">*</span></span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+              <div style="margin: 10px 20px; font-size: 10px; height: 44px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkUpdate"
+                  [(ngModel)]="registerForm.checkUpdate"
+                  name="checkls2"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I would like to receive the latest news, promos, and
+                      updates from Bunitas. Bunitas does not share or sell your
+                      personal information</span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+            </div>
+            <p
+              class="creatAc"
+              (click)="registerModal.hide(); loginModal.show()"
+            >
+              {{ util.translate("or") }}
+              <span class="colored">
+                {{ util.translate("login to your account") }}</span
+              >
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            mdbBtn
+            color="default"
+            class="waves-light"
+            style="background-color: #9c0278 !important"
+            [disabled]="isLogin"
+            (click)="onRegister(loginForm, registerModal, verifyModal, 0)"
+            mdbWavesEffect
+          >
+            <span *ngIf="!isLogin"> {{ util.translate("Signup") }}</span>
+            <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #registerPartnerModal="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <form #loginForm="ngForm" novalidate>
+      <div class="modal-content">
+        <div class="modal-header text-center">
+          <h4 class="modal-title w-100 font-weight-bold">
+            {{ util.translate("Join As Partner") }}
+          </h4>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="registerPartnerModal.hide()"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body location_body">
+          <div>
+            <div class="form_div">
+              <div class="row">
+                <div class="col-sm-8">
+                  <div
+                    class="form-group file-input-container"
+                    style="margin-top: 15px"
+                  >
+                    <input
+                      type="file"
+                      id="logo"
+                      name="logo"
+                      style="display: none"
+                      accept="image/*"
+                      required
+                      class="form-control file_ip"
+                      (change)="preview_banner($event.target.files)"
+                    />
+                    <label for="logo" class="custom-file-button">{{
+                      util.translate("Upload Display Picture")
+                    }}</label>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <div class="image_div">
+                      <div class="image_box">
+                        <img
+                          class="img-responsive"
+                          style="height: 80px; width: 80px; object-fit: cover"
+                          [src]="api.mediaURL + registerPartnerForm.cover"
+                          onError="this.src='assets/imgs/dummy.jpeg'"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input
+                type="email"
+                [placeholder]="util.translate('Email')"
+                name="partner_email"
+                #partner_email="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                [(ngModel)]="registerPartnerForm.email"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p
+                [hidden]="partner_email.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Email is required") }}
+              </p>
+              <div class="row">
+                <div
+                  class="col-3"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                  "
+                >
+                  <select
+                    [(ngModel)]="registerPartnerForm.cc"
+                    type="text"
+                    name="partner_ccode"
+                    #partner_ccode="ngModel"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    required
+                    style="border: 1px solid lightgray; width: 100%"
+                  >
+                    <option
+                      *ngFor="let item of util.countrys"
+                      [value]="item.dialling_code"
+                    >
+                      +{{ item.dialling_code }}
+                      {{ item.country_name }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-9">
+                  <input
+                    [(ngModel)]="registerPartnerForm.mobile"
+                    type="number"
+                    [placeholder]="util.translate('Mobile Number')"
+                    name="partner_mobile"
+                    #partner_mobile="ngModel"
+                    spellcheck="false"
+                    autocapitalize="off"
+                    required
+                    class="form-control frm"
+                    (keydown)="handleKeyDown($event)"
+                    min="1000000000"
+                    max="9999999999"
+                  />
+                </div>
+              </div>
+              <p
+                [hidden]="partner_mobile.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Phone number is required") }}
+              </p>
+              <select
+                [(ngModel)]="registerPartnerForm.type"
+                required
+                style="
+                  border: 1px solid lightgray;
+                  width: 100%;
+                  padding: 0 8px 0 8px;
+                "
+                [ngModelOptions]="{ standalone: true }"
+                #partnerType="ngModel"
+              >
+                <option
+                  *ngFor="let item of util.partnerTypes; let i = index"
+                  value="{{ i }}"
+                >
+                  {{ item }}
+                </option>
+              </select>
+              <p
+                [hidden]="partnerType.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Type of Partner is required") }}
+              </p>
+
+              <input
+                [(ngModel)]="registerPartnerForm.salon_name"
+                type="text"
+                [placeholder]="util.translate('Business Name')"
+                name="business_name"
+                #business_name="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                class="form-control frm"
+              />
+              <p
+                [hidden]="business_name.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Business Name is required") }}
+              </p>
+
+              <input
+                [(ngModel)]="registerPartnerForm.first_name"
+                type="text"
+                [placeholder]="util.translate('First Name')"
+                name="partner_first_name"
+                #partner_first_name="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                class="form-control frm"
+              />
+              <p
+                [hidden]="partner_first_name.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("First Name is required") }}
+              </p>
+              <input
+                type="text"
+                [placeholder]="util.translate('Last Name')"
+                [(ngModel)]="registerPartnerForm.last_name"
+                name="partner_last_name"
+                #partner_last_name="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+                class="form-control frm"
+              />
+              <p
+                [hidden]="partner_last_name.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Last Name is required") }}
+              </p>
+              <input
+                name="partner_password"
+                [placeholder]="util.translate('Password')"
+                type="password"
+                #partner_password="ngModel"
+                required
+                [(ngModel)]="registerPartnerForm.password"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p
+                [hidden]="partner_password.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Password is required") }}
+              </p>
+              <select
+                [(ngModel)]="registerPartnerForm.gender"
+                required
+                style="
+                  border: 1px solid lightgray;
+                  width: 100%;
+                  padding: 0 8px 0 8px;
+                "
+                [ngModelOptions]="{ standalone: true }"
+              >
+                <option value="1">{{ util.translate("Male") }}</option>
+                <option value="0">{{ util.translate("Female") }}</option>
+                <option value="2">{{ util.translate("Others") }}</option>
+              </select>
+              <input
+                type="date"
+                [(ngModel)]="registerPartnerForm.dob"
+                name="partner_dob"
+                #partner_dob="ngModel"
+                autocomplete="cc-exp"
+                ccExp
+                [ngModelOptions]="{ standalone: true }"
+                mdbInput
+                class="form-control frm"
+                required
+                style="padding: 0 1px 0 11px"
+              />
+              <p
+                [hidden]="partner_dob.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Dob Date is required") }}
+              </p>
+              <!-- <input name="fee_start" [placeholder]="util.translate('Fee Started Price')" type="number" #fee_start="ngModel"
+                required [(ngModel)]="registerPartnerForm.fee_start" class="form-control frm"
+                [ngModelOptions]="{standalone: true}">
+              <p [hidden]="fee_start.valid || partnerSubmitted == false" class="redAlert">
+                {{util.translate('Fee Started Price is required')}}
+              </p> -->
+              <input
+                name="about"
+                [placeholder]="util.translate('About you / your salon')"
+                type="text"
+                #about="ngModel"
+                required
+                [(ngModel)]="registerPartnerForm.about"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p
+                [hidden]="about.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("About you / your salon required") }}
+              </p>
+              <ng-multiselect-dropdown
+                [placeholder]="util.translate('Treatments')"
+                [ngModelOptions]="{ standalone: true }"
+                maxHeight="100"
+                [data]="util.categories"
+                [(ngModel)]="registerPartnerForm.category"
+                [settings]="dropdownSettings"
+                #category="ngModel"
+              >
+              </ng-multiselect-dropdown>
+              <p
+                [hidden]="category.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Treatment is required") }}
+              </p>
+
+              <select
+                [(ngModel)]="registerPartnerForm.cid"
+                required
+                style="
+                  border: 1px solid lightgray;
+                  width: 100%;
+                  margin-top: 10px;
+                  padding: 0 8px 0 8px;
+                "
+                [ngModelOptions]="{ standalone: true }"
+                #cid="ngModel"
+              >
+                <option disabled selected value="" style="display: none">
+                  {{ util.translate("Location/City") }}
+                </option>
+                <option *ngFor="let item of util.cities" [value]="item.id">
+                  {{ item.name }}
+                </option>
+              </select>
+              <p
+                [hidden]="cid.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Location/City is required") }}
+              </p>
+              <input
+                name="address"
+                [placeholder]="util.translate('Address')"
+                type="text"
+                #address="ngModel"
+                required
+                [(ngModel)]="registerPartnerForm.address"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+              />
+              <p
+                [hidden]="address.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Address is required") }}
+              </p>
+              <input
+                name="zipcode"
+                [placeholder]="util.translate('Post Code')"
+                type="text"
+                #zipcode="ngModel"
+                required
+                [(ngModel)]="registerPartnerForm.zipcode"
+                class="form-control frm"
+                [ngModelOptions]="{ standalone: true }"
+                (change)="getLatLngWithPostCode($event)"
+              />
+              <p
+                [hidden]="zipcode.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Post Code is required") }}
+              </p>
+              <div class="file-input-container">
+                <input
+                  type="file"
+                  id="idCard"
+                  name="idCard"
+                  style="display: none"
+                  accept="image/*"
+                  required
+                  class="form-control file_ip"
+                  (change)="changeAttachment($event.target.files, 0)"
+                  #idcard="ngModel"
+                  [(ngModel)]="registerPartnerForm.idCard"
+                />
+                <label for="idCard" class="custom-file-button">{{
+                  this.idCardTitle
+                }}</label>
+              </div>
+              <p
+                [hidden]="idcard.valid || partnerSubmitted == false"
+                class="redAlert"
+              >
+                {{ util.translate("Id Card is required") }}
+              </p>
+              <div class="file-input-container" style="margin-top: 12px">
+                <input
+                  type="file"
+                  id="qualification"
+                  name="qualification"
+                  style="display: none"
+                  accept="image/*"
+                  required
+                  class="form-control file_ip"
+                  (change)="changeAttachment($event.target.files, 1)"
+                />
+                <label for="qualification" class="custom-file-button">{{
+                  this.qualificationTitle
+                }}</label>
+              </div>
+
+              <input
+                type="text"
+                [placeholder]="util.translate('Referral Code(optional)')"
+                [(ngModel)]="registerPartnerForm.referral"
+                name="partner_referral"
+                #partner_referral="ngModel"
+                spellcheck="false"
+                autocapitalize="off"
+                [ngModelOptions]="{ standalone: true }"
+                class="form-control frm"
+              />
+              <!-- <div class="row">
+                <div class="col-6">
+                  <input name="lat" [placeholder]="util.translate('Your Latitude')" type="number" #lat="ngModel"
+                    [(ngModel)]="registerPartnerForm.lat" class="form-control frm" [ngModelOptions]="{standalone: true}" required>
+                  <p [hidden]="lat.valid || partnerSubmitted == false" class="redAlert">
+                    {{util.translate('Latitude is required')}}
+                  </p>
+                </div>
+                <div class="col-6">
+                  <input name="lng" [placeholder]="util.translate('Your Longitude')" type="number" #lng="ngModel"
+                    [(ngModel)]="registerPartnerForm.lng" class="form-control frm" [ngModelOptions]="{standalone: true}" required>
+                  <p [hidden]="lng.valid || partnerSubmitted == false" class="redAlert">
+                    {{util.translate('Langitude is required')}}
+                  </p>
+                </div>
+              </div> -->
+
+              <div style="margin: 10px 20px; font-size: 10px; height: 14px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkTermsAndCondition"
+                  [(ngModel)]="registerForm.checkTermsAndCondition"
+                  name="checkls"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I've read and accepted the Terms & conditions
+                      <span style="color: red">*</span></span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+              <div style="margin: 10px 20px; font-size: 10px; height: 14px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkAge"
+                  [(ngModel)]="registerForm.checkAge"
+                  name="checkls1"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I am over 18 years old
+                      <span style="color: red">*</span></span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+              <div style="margin: 10px 20px; font-size: 10px; height: 44px">
+                <mdb-checkbox
+                  [checked]="registerForm.checkUpdate"
+                  [(ngModel)]="registerForm.checkUpdate"
+                  name="checkls2"
+                  #checkls="ngModel"
+                  color="light"
+                >
+                  <p
+                    style="margin: 0px !important; margin-top: 10px !important"
+                  >
+                    <span class="span_term"
+                      >I would like to receive the latest news, promos, and
+                      updates from Bunitas. Bunitas does not share or sell your
+                      personal information</span
+                    >
+                  </p>
+                </mdb-checkbox>
+              </div>
+            </div>
+            <p
+              class="creatAc"
+              (click)="registerPartnerModal.hide(); loginModal.show()"
+            >
+              {{ util.translate("or") }}
+              <span class="colored">
+                {{ util.translate("login to your account") }}</span
+              >
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-center">
+          <button
+            mdbBtn
+            color="default"
+            class="waves-light"
+            [disabled]="isLogin"
+            style="background-color: #9c0278 !important"
+            (click)="
+              onRegister(loginForm, registerPartnerModal, verifyModal, 1)
+            "
+            mdbWavesEffect
+          >
+            <span *ngIf="!isLogin"> {{ util.translate("Signup") }}</span>
+            <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #forgotPwd="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Reset Password") }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="forgotPwd.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div>
+          <div class="form_div" *ngIf="div_type == 1">
+            <input
+              type="email"
+              [(ngModel)]="reset_email"
+              [placeholder]="util.translate('Email')"
+              class="form-control frm"
+            />
+          </div>
+
+          <div class="form_div" *ngIf="div_type == 2">
+            <input
+              type="email"
+              [(ngModel)]="reset_otp"
+              [placeholder]="util.translate('OTP')"
+              class="form-control frm"
+            />
+          </div>
+          <div class="form_div" *ngIf="div_type == 3">
+            <input
+              type="password"
+              [(ngModel)]="reset_password"
+              [placeholder]="util.translate('New Password')"
+              class="form-control frm"
+            />
+            <input
+              type="password"
+              [(ngModel)]="reset_repass"
+              [placeholder]="util.translate('Confirm Password')"
+              class="form-control frm"
+            />
+          </div>
+          <p class="creatAc" (click)="forgotPwd.hide(); loginModal.show()">
+            {{ util.translate("or") }}
+            <span class="colored">
+              {{ util.translate("login to your account") }}</span
+            >
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          (click)="sendResetLink()"
+          mdbWavesEffect
+          [disabled]="isLogin"
+          *ngIf="div_type == 1"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Send OTP") }} </span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          (click)="verifyOTPOfReset()"
+          mdbWavesEffect
+          [disabled]="isLogin"
+          *ngIf="div_type == 2"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Verify OTP") }} </span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          (click)="sendEmailResetPasswordMail()"
+          mdbWavesEffect
+          [disabled]="isLogin"
+          *ngIf="div_type == 3"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Reset Password") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #verifyModal="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Verify Mobile") }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="verifyModal.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div>
+          <p class="subTitleText" *ngIf="util.user_verify_with == 0">
+            {{ util.translate("We texted you a code to verify") }}
+            <br />
+            {{ util.translate("your email") }} {{ registerForm.email }}
+          </p>
+          <p class="subTitleText" *ngIf="util.user_verify_with == 1">
+            {{ util.translate("We texted you a code to verify") }}
+            <br />
+            {{ util.translate("your phone") }} +{{ this.registerForm.cc }}
+            {{ this.registerForm.mobile }}
+          </p>
+          <div class="otpInput">
+            <ng-otp-input
+              (onInputChange)="onOtpChange($event)"
+              [config]="{
+                length: 6,
+                inputStyles: {
+                  width: '30px !important',
+                  height: '30px !important'
+                }
+              }"
+            >
+            </ng-otp-input>
+          </div>
+          <p
+            style="text-align: center; cursor: pointer"
+            (click)="resend()"
+            *ngIf="resendCode"
+          >
+            <span style="color: #9c0278">{{
+              util.translate("Resend code")
+            }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          mdbWavesEffect
+          [disabled]="isLogin"
+          (click)="verify()"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Continue") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #otpModal="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Verify Mobile") }}
+        </h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="verifyModal.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div>
+          <p class="subTitleText">
+            {{ util.translate("We texted you a code to verify") }} <br />
+            {{ util.translate("your phone") }} +{{ this.mobileLogin.ccCode }}
+            {{ this.mobileLogin.phone }}
+          </p>
+          <div class="otpInput">
+            <ng-otp-input
+              (onInputChange)="onOtpChange($event)"
+              [config]="{
+                length: 6,
+                inputStyles: {
+                  width: '30px !important',
+                  height: '30px !important'
+                }
+              }"
+            >
+            </ng-otp-input>
+          </div>
+          <p
+            style="text-align: center; cursor: pointer"
+            (click)="resend2()"
+            *ngIf="resendCode"
+          >
+            <span style="color: #9c0278">{{
+              util.translate("Resend code")
+            }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          [disabled]="isLogin"
+          mdbWavesEffect
+          (click)="otpLogin()"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Continue") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  [ngClass]="!util.commingsoon ? 'spacer' : 'coming-soon'"
+  (window:resize)="onResize($event)"
+>
+  <router-outlet></router-outlet>
+</div>
+<app-footers *ngIf="!util.commingsoon"></app-footers>

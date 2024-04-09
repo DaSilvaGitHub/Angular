@@ -1,0 +1,934 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<div
+  class="d-flex align-items-center justify-content-center gap-5"
+  style="margin-top: 5rem"
+  *ngIf="util.deviceType == 'mobile'"
+>
+  <div class="line-bar"></div>
+  <p class="service-title">
+    {{ util.translate("Shop Now") }}
+  </p>
+  <div class="line-bar"></div>
+</div>
+
+<div *ngIf="apiCalled == false" class="centerItem">
+  <div class="spinner-border text-success" role="status">
+    <span class="sr-only">{{ util.translate("Loading...") }}</span>
+  </div>
+</div>
+<div class="container" *ngIf="apiCalled == true">
+  <div class="row mt-5 mb-4 product_container">
+    <div class="col-lg-6 image-view">
+      <div class="recommend-slider mb-3 sticky_sidebar">
+        <owl-carousel-o [options]="customOptions">
+          <ng-container *ngFor="let slide of [1, 2, 3, 4]">
+            <ng-template carouselSlide>
+              <div class="product-detail-img rounded overflow-hidden">
+                <a>
+                  <div
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        productCover +
+                        '),url(assets/images/placeholder.png)'
+                    }"
+                    class="product-img"
+                  ></div>
+                </a>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+        <div class="product_imgs" *ngFor="let img of images">
+          <div
+            class="producs_imgs_img"
+            [ngStyle]="{
+              'background-image':
+                'url(' +
+                img +
+                '
+            ),url(assets/images/placeholder.png)'
+            }"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="product_info">
+      <div class="like" *ngIf="util.deviceType == 'desktop'">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          (click)="addToFavorite()"
+        >
+          <path
+            d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+            fill="#282828"
+          />
+        </svg>
+      </div>
+      <h5 class="">{{ productName }}</h5>
+      <div class="product_content">
+        <div class="product_content_text">
+          <h6>{{ util.translate("Sold By") }}</h6>
+          <p>{{ soldBy }}</p>
+        </div>
+
+        <div class="product_content_text">
+          <h6>{{ util.translate("Highlight") }}</h6>
+          <p>{{ highlight }}</p>
+        </div>
+
+        <div class="product_content_text">
+          <h6>{{ util.translate("Descriptions") }}</h6>
+          <p>{{ descriptions }}</p>
+        </div>
+
+        <div class="d-flex align-item-center reviews">
+          <mdb-icon
+            fas
+            icon="star"
+            class="star"
+            size="sm"
+            [ngStyle]="{
+              color: rating >= 1 ? 'orange' : 'grey',
+              width: util.deviceType !== 'mobile' ? '26px' : '15px',
+              height: '15px',
+              transform:
+                util.deviceType !== 'mobile' ? 'scale(1.3)' : 'scale(1)'
+            }"
+          >
+          </mdb-icon>
+          <mdb-icon
+            fas
+            icon="star"
+            class="star"
+            size="sm"
+            [ngStyle]="{
+              color: rating >= 2 ? 'orange' : 'grey',
+              width: util.deviceType !== 'mobile' ? '26px' : '15px',
+              height: '15px',
+              transform:
+                util.deviceType !== 'mobile' ? 'scale(1.3)' : 'scale(1)'
+            }"
+          >
+          </mdb-icon>
+          <mdb-icon
+            fas
+            icon="star"
+            class="star"
+            size="sm"
+            [ngStyle]="{
+              color: rating >= 3 ? 'orange' : 'grey',
+              width: util.deviceType !== 'mobile' ? '26px' : '15px',
+              height: '15px',
+              transform:
+                util.deviceType !== 'mobile' ? 'scale(1.3)' : 'scale(1)'
+            }"
+          >
+          </mdb-icon>
+          <mdb-icon
+            fas
+            icon="star"
+            class="star"
+            size="sm"
+            [ngStyle]="{
+              color: rating >= 4 ? 'orange' : 'grey',
+              width: util.deviceType !== 'mobile' ? '26px' : '15px',
+              height: '15px',
+              transform:
+                util.deviceType !== 'mobile' ? 'scale(1.3)' : 'scale(1)'
+            }"
+          >
+          </mdb-icon>
+          <mdb-icon
+            fas
+            icon="star"
+            class="star"
+            size="sm"
+            [ngStyle]="{
+              color: rating >= 5 ? 'orange' : 'grey',
+              width: util.deviceType !== 'mobile' ? '26px' : '15px',
+              height: '15px',
+              transform:
+                util.deviceType !== 'mobile' ? 'scale(1.3)' : 'scale(1)'
+            }"
+          >
+          </mdb-icon>
+          <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+            ({{ totalRating > 0 ? totalRating : 0 }} Reviews)
+          </h6>
+        </div>
+
+        <div class="d-flex align-items-center mt-2 pricing">
+          <h6 class="h6 mb-0 small pr-3 text-muted">
+            <p style="color: #de1111; font-size: 1.5rem; opacity: 0.3">
+              <span *ngIf="util.currencySide == 'left'">
+                {{ util.currencySymbol }}{{ sellPrice }}
+              </span>
+              <span *ngIf="util.currencySide == 'right'">
+                {{ sellPrice }}{{ util.currencySymbol }}
+              </span>
+            </p>
+          </h6>
+
+          <h6 class="">
+            <span
+              class=""
+              *ngIf="util.currencySide == 'left'"
+              style="font-size: 2rem"
+            >
+              {{ util.currencySymbol }}{{ originalPrice }}
+            </span>
+            <span
+              class=""
+              *ngIf="util.currencySide == 'right'"
+              style="font-size: 2rem"
+            >
+              {{ originalPrice }}{{ util.currencySymbol }}
+            </span>
+          </h6>
+        </div>
+      </div>
+      <div class="product_info_cart">
+        <!-- TODO: DO LOGIC TO ADD IN CART -->
+
+        <button (click)="subProduct()">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4.05469 8.93945H13.8265"
+              stroke="#B4B4B4"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <p
+          [ngStyle]="{
+            width: '2rem',
+            'text-align': 'center'
+          }"
+        >
+          {{ productCnt }}
+        </p>
+        <button (click)="addProduct()">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.06135 4.05371V13.8255M4.17578 8.93928H13.9476"
+              stroke="#B4B4B4"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="checkout_button" (click)="addToCart()">
+        <button>Add Cart</button>
+      </div>
+    </div>
+
+    <div class="col-lg-6 description-view" *ngIf="false">
+      <div class="p-4 bg-white rounded shadow-sm">
+        <div class="pt-0">
+          <h5 class="ff-bold mb-2">{{ productName }}</h5>
+          <div class="d-flex align-items-center">
+            <h6 class="f-primary mb-0 head-text mr-3">
+              <span
+                class="ff-bold head-text"
+                *ngIf="util.currencySide == 'left'"
+              >
+                {{ util.currencySymbol }}{{ originalPrice }}
+              </span>
+              <span
+                class="ff-bold head-text"
+                *ngIf="util.currencySide == 'right'"
+              >
+                {{ originalPrice }}{{ util.currencySymbol }}
+              </span>
+            </h6>
+
+            <h6 class="h6 mb-0 small pr-3 text-muted">
+              <del>
+                <span *ngIf="util.currencySide == 'left'">
+                  {{ util.currencySymbol }}{{ sellPrice }}
+                </span>
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ sellPrice }}{{ util.currencySymbol }}
+                </span>
+              </del>
+            </h6>
+          </div>
+          <a>
+            <div class="d-flex my-2">
+              <mdb-icon
+                fas
+                icon="star"
+                size="sm"
+                [ngStyle]="{ color: rating >= 1 ? 'orange' : 'grey' }"
+              >
+              </mdb-icon>
+              <mdb-icon
+                fas
+                icon="star"
+                size="sm"
+                [ngStyle]="{ color: rating >= 2 ? 'orange' : 'grey' }"
+              >
+              </mdb-icon>
+              <mdb-icon
+                fas
+                icon="star"
+                size="sm"
+                [ngStyle]="{ color: rating >= 3 ? 'orange' : 'grey' }"
+              >
+              </mdb-icon>
+              <mdb-icon
+                fas
+                icon="star"
+                size="sm"
+                [ngStyle]="{ color: rating >= 4 ? 'orange' : 'grey' }"
+              >
+              </mdb-icon>
+              <mdb-icon
+                fas
+                icon="star"
+                size="sm"
+                [ngStyle]="{ color: rating >= 5 ? 'orange' : 'grey' }"
+              >
+              </mdb-icon>
+              <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                {{ totalRating }}
+              </h6>
+            </div>
+          </a>
+        </div>
+
+        <div class="pt-2">
+          <div>
+            <p class="ff-bold h6 mb-2">
+              {{ util.translate("descriptions") }}
+            </p>
+            <p class="text-muted small my-2">{{ descriptions }}</p>
+            <p class="ff-bold h6 mb-2">{{ util.translate("Highlight") }}</p>
+            <p class="text-muted small my-2">{{ highlight }}</p>
+            <p class="ff-bold h6 mb-2">{{ util.translate("Disclaimer") }}</p>
+            <p class="text-muted small my-2">{{ disclaimer }}</p>
+            <p class="ff-bold h6 mb-2">{{ util.translate("Sold By") }}</p>
+            <p class="text-muted small my-2">{{ soldBy }}</p>
+
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <button
+                type="button"
+                (click)="addToCart()"
+                *ngIf="productInfo.quantity == 0"
+                mdbBtn
+                class="rounded text-white m-0 mt-2 py-2 px-4 btn-color"
+                mdbWavesEffect
+              >
+                {{ util.translate("ADD") }}
+              </button>
+
+              <div
+                class="qty_flex"
+                *ngIf="productCart.itemId.includes(productInfo.id)"
+              >
+                <div class="round_btn" (click)="remove()">
+                  <mdb-icon fas icon="minus"></mdb-icon>
+                </div>
+                <label>{{ getQuanity(productInfo.id) }}</label>
+                <div class="round_btn" (click)="add()">
+                  <mdb-icon fas icon="plus"></mdb-icon>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                (click)="goToProductCheckout()"
+                mdbBtn
+                class="rounded text-white m-0 mt-2 py-2 px-4 btn-color"
+                mdbWavesEffect
+              >
+                {{ util.translate("Checkout") }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="reviewList.length > 0">
+    <div
+      class="d-flex align-items-center justify-content-center gap-5"
+      style="margin-top: 3em; margin-bottom: 2rem"
+      *ngIf="util.deviceType === 'desktop'"
+    >
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Reviews") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+
+    <div class="slider_row reviews" *ngIf="util.deviceType === 'desktop'">
+      <div class="container category-owl" style="width: 100%">
+        <owl-carousel-o [options]="reviewOption">
+          <ng-container *ngFor="let item of reviewList; let i = index">
+            <ng-template carouselSlide>
+              <div
+                class=""
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <div class="review_card">
+                  <div class="quote-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="36"
+                      viewBox="0 0 40 36"
+                      fill="none"
+                    >
+                      <path
+                        d="M16.0071 18.729H8.57262C8.57262 13.2336 10.2623 9.30841 16.0071 7.40187V0C6.65769 1.23365 -0.326169 8.97197 0.0117592 18.8411V36H16.0071V18.729ZM40 18.729H32.5656C32.5656 13.2336 34.2552 9.30841 40 7.40187V0C30.6506 1.23365 23.6668 8.97197 24.0047 18.8411V36H40V18.729Z"
+                        fill="#99047A"
+                        fill-opacity="0.1"
+                      />
+                    </svg>
+                  </div>
+                  <p class="review_card_text">{{ item.text }}</p>
+                  <div class="review_card_details">
+                    <img [src]="api.mediaURL + item.cover" alt="Author image" />
+                    <div class="review_card_info">
+                      <strong>{{ item.author }}</strong>
+                      <div class="review_card_info_rating">
+                        <span>{{ item.rating }}</span>
+                        <div
+                          class="d-flex justify-content-center align-item-center mb-2"
+                        >
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 1 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 2 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 3 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 4 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 5 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template carouselSlide>
+              <div
+                class=""
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <div class="review_card">
+                  <div class="quote-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="36"
+                      viewBox="0 0 40 36"
+                      fill="none"
+                    >
+                      <path
+                        d="M16.0071 18.729H8.57262C8.57262 13.2336 10.2623 9.30841 16.0071 7.40187V0C6.65769 1.23365 -0.326169 8.97197 0.0117592 18.8411V36H16.0071V18.729ZM40 18.729H32.5656C32.5656 13.2336 34.2552 9.30841 40 7.40187V0C30.6506 1.23365 23.6668 8.97197 24.0047 18.8411V36H40V18.729Z"
+                        fill="#99047A"
+                        fill-opacity="0.1"
+                      />
+                    </svg>
+                  </div>
+                  <p class="review_card_text">{{ item.text }}</p>
+                  <div class="review_card_details">
+                    <img [src]="item.image" alt="Author image" />
+                    <div class="review_card_info">
+                      <strong>{{ item.author }}</strong>
+                      <div class="review_card_info_rating">
+                        <span>{{ item.rating }}</span>
+                        <div
+                          class="d-flex justify-content-center align-item-center mb-2"
+                        >
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 1 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 2 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 3 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 4 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="md"
+                            [ngStyle]="{
+                              color: item.rating >= 5 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
+
+      <div
+        class="col-lg-9"
+        *ngIf="productsCalled == true && util.deviceType == 'desktop'"
+      >
+        <div class="card-area row">
+          <div
+            class="card col-6 col-md-4 col-lg-4 my-2 px-2"
+            *ngFor="let item of productList; let i = index"
+          >
+            <div class="px-0 rounded overflow-hidden shadow-sm animate border">
+              <a class="text-dark">
+                <div class="product-list text-center pb-3">
+                  <div
+                    (click)="onProductDetail(item.id)"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.jpg)'
+                    }"
+                    class="bg-img mb-3"
+                  ></div>
+                  <h5 class="head-text text-black ff-medium px-2 text-overflow">
+                    {{ item.name }}
+                  </h5>
+
+                  <div
+                    class="d-flex justify-content-center align-item-center mb-2"
+                  >
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 1 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 2 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 3 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 4 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 5 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                      {{ item.total_rating }}
+                    </h6>
+                  </div>
+                  <div
+                    class="d-flex justify-content-center align-items-center mx-3"
+                  >
+                    <h6 class="h6 mb-0 pr-3 text-muted small">
+                      <del>
+                        <span *ngIf="util.currencySide == 'left'">
+                          {{ util.currencySymbol }}{{ item.original_price }}
+                        </span>
+                        <span *ngIf="util.currencySide == 'right'"
+                          >{{ item.original_price }}{{ util.currencySymbol }}
+                        </span>
+                      </del>
+                    </h6>
+                    <h6 class="f-primary mb-0">
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'left'"
+                      >
+                        {{ util.currencySymbol }}{{ item.sell_price }}
+                      </span>
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'right'"
+                      >
+                        {{ item.sell_price }}{{ util.currencySymbol }}
+                      </span>
+                    </h6>
+                  </div>
+
+                  <div class="flex">
+                    <button
+                      type="button"
+                      (click)="addToCart(i)"
+                      *ngIf="item.quantity == 0"
+                      mdbBtn
+                      class="rounded text-white m-0 mt-2 py-2 px-4 btn-color"
+                      mdbWavesEffect
+                    >
+                      {{ util.translate("ADD") }}
+                    </button>
+
+                    <button
+                      (click)="addToFavorite(item.id)"
+                      mdbBtn
+                      class="rounded-circle bg-white primary-font-color"
+                      style="width: 50px; height: 50px; padding: 18px 5px"
+                    >
+                      <mdb-icon fas icon="heart"></mdb-icon>
+                    </button>
+                  </div>
+
+                  <div
+                    class="qty_flex my-2"
+                    *ngIf="productCart.itemId.includes(item.id)"
+                  >
+                    <div class="round_btn" (click)="remove(i)">
+                      <mdb-icon fas icon="minus"></mdb-icon>
+                    </div>
+                    <h6 class="m-0 ff-medium px-2">{{ item.quantity }}</h6>
+                    <div class="round_btn" (click)="add(i)">
+                      <mdb-icon fas icon="plus"></mdb-icon>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="no_data" *ngIf="productList.length == 0">
+          <div
+            class="empty"
+            [ngStyle]="{ 'background-image': 'url(assets/nodata.jpg)' }"
+          ></div>
+          <p>{{ util.translate("Opps.. nothing found") }}</p>
+        </div>
+      </div>
+
+      <div class="col-lg-9" *ngIf="productsCalled == false">
+        <div class="row">
+          <div
+            class="col-6 col-md-4 col-lg-4 my-2 px-2"
+            *ngFor="let item of [1, 2, 3, 5, 6]"
+          >
+            <ngx-skeleton-loader
+              appearance="circle"
+              [theme]="{
+                'border-radius': '5px',
+                height: '150px',
+                width: '100%'
+              }"
+            >
+            </ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="d-flex align-items-center justify-content-center gap-5"
+    style="margin-top: 3em; margin-bottom: 2rem"
+  >
+    <div class="line-bar"></div>
+    <p class="service-title">
+      {{ util.translate("Related Products") }}
+    </p>
+    <div class="line-bar"></div>
+  </div>
+
+  <div class="slider_row related-products">
+    <div
+      class="container category-owl related-products-owl"
+      style="width: 100%"
+    >
+      <owl-carousel-o [options]="productOption">
+        <ng-container *ngFor="let item of relatedProductsList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class=""
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+              (click)="onProductDetail(item.id)"
+            >
+              <div class="related_products_card">
+                <div class="related_products_card_img">
+                  <img [src]="api.mediaURL + item.cover" alt="" />
+                  <div class="related_products_card_icon">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      (click)="addToFavorite(item.id)"
+                    >
+                      <path
+                        d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                        fill="#99047A"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <p
+                  class="related_products_card_title"
+                  *ngIf="util.deviceType == 'desktop'"
+                >
+                  {{ item.name | titlecase }}
+                </p>
+                <div class="related_products_card_content">
+                  <div class="related_products_card_info">
+                    <div class="d-flex align-item-center">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+
+                    <div class="related_products_card_info_pricing">
+                      <div class="related_products_card_info_price">
+                        <h6 class="">
+                          <del style="color: red">
+                            <span *ngIf="util.currencySide == 'left'">
+                              {{ util.currencySymbol }}{{ item.original_price }}
+                            </span>
+                            <span *ngIf="util.currencySide == 'right'"
+                              >{{ item.original_price
+                              }}{{ util.currencySymbol }}
+                            </span>
+                          </del>
+                        </h6>
+                      </div>
+                      <div class="related_products_card_info_price">
+                        <h6 class="">
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'left'"
+                          >
+                            {{ util.currencySymbol }}{{ item.sell_price }}
+                          </span>
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'right'"
+                          >
+                            {{ item.sell_price }}{{ util.currencySymbol }}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    class="related_products_card_button"
+                    (click)="addToCart(i)"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+
+    <div class="col-lg-9" *ngIf="productsCalled == false">
+      <div class="row">
+        <div
+          class="col-6 col-md-4 col-lg-4 my-2 px-2"
+          *ngFor="let item of [1, 2, 3, 5, 6]"
+        >
+          <ngx-skeleton-loader
+            appearance="circle"
+            [theme]="{
+              'border-radius': '5px',
+              height: '150px',
+              width: '100%'
+            }"
+          >
+          </ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

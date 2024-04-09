@@ -1,0 +1,828 @@
+/*
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+*/
+
+$font-family: "Poppins";
+
+.salon-name {
+  font-family: $font-family;
+  font-size: 64px;
+  font-weight: bold;
+}
+
+.service_card_img {
+  width: 80%;
+}
+
+.salon-button {
+  button {
+    padding: 1rem 2rem !important;
+  }
+}
+
+.salom_title {
+  margin-top: 4rem;
+  justify-content: space-between;
+}
+
+.booking-color {
+  background-color: #fff;
+}
+
+.user-avatar {
+  & img {
+    margin-right: -15px;
+  }
+}
+.about {
+  margin-bottom: 20px !important;
+  text-align: start;
+}
+.slider_back_cate {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  transition: transform 0.5s;
+  cursor: pointer;
+}
+
+.slider_back_cate.zoomed{
+  transform: scale(1.3);
+  position: absolute;
+  z-index: 99999;
+}
+
+.slider_row {
+  margin-top: 20px;
+}
+
+.social-medias {
+  display: flex;
+  gap: 1rem;
+  .social-media {
+    padding: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 5px;
+    background-color: #b5b5b5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.specialist {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  min-width: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+}
+
+.rf-xl-1 {
+  font-size: 18px;
+}
+
+.rf-xl-2 {
+  font-size: 20px;
+}
+
+.specialist {
+  margin: auto !important;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.head-text {
+  text-align: initial;
+}
+
+.sub-text {
+  text-align: initial;
+}
+
+.user-img-tiny {
+  height: 150px;
+}
+
+.overview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100% !important;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.policy-title {
+  font-family: $font-family;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.policy-content {
+  font-family: $font-family;
+  font-weight: 400;
+  font-size: 16px;
+  word-wrap: break-word;
+}
+
+.about-container {
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  padding: 40px 32px;
+  flex: 2;
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+.timing-container {
+  border: 1px solid #e2e2e2;
+  border-radius: 12px;
+  padding: 40px 32px;
+  flex: 1;
+}
+
+.contact-part {
+  padding: 20px 15px;
+}
+
+.contact-info {
+  width: 100%;
+  padding: 25px;
+  background-color: #f3f3f3;
+}
+.social-item {
+  margin-right: 25px;
+}
+
+.review-total {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 0px 10px;
+}
+
+.review-individual {
+  margin: 10px 0px 20px 72px;
+}
+
+.fixed-short {
+  position: fixed;
+  bottom: 75px;
+  right: 5px;
+}
+
+.opentiming-indicator {
+  width: 12px;
+  height: 12px;
+  background-repeat: no-repeat;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiI+PGNpcmNsZSBjeD0iMTc4IiBjeT0iNTM2IiByPSI2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTcyIC01MzApIiBmaWxsPSIjM2JhMTUwIi8+PC9zdmc+);
+  margin-right: 20px;
+}
+
+.gallery-1 {
+  height: 500px;
+}
+
+.gallery-2 {
+  height: 500px;
+}
+
+.gallery-3 {
+  position: relative;
+  height: 500px;
+}
+
+.gallery-3 .sub-row {
+  height: 500px;
+}
+
+.sub-row .slider_back_cate {
+  padding: 10px;
+}
+
+.load-more {
+  position: absolute;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.2);
+  }
+}
+
+.line-bar {
+  width: 48px;
+  height: 2px;
+  background: var(--white-10);
+  margin: 10px 20px;
+}
+
+.line-bar-pink {
+  width: 48px;
+  height: 2px;
+  background: var(--ng-color-primary);
+  margin: 10px 20px;
+}
+
+.salom_card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #e2e2e2;
+  border-radius: 12px;
+  width: 100%;
+  height: 19rem;
+  padding: 1rem;
+  margin-left: 0.1rem;
+
+  .salom_card_img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 11rem;
+    background-size: cover;
+    border-radius: 12px;
+  }
+
+  &_content {
+    width: 100%;
+    p {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+  }
+
+  &_info {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    span {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.service-title {
+  color: var(--white-10);
+  font-weight: 700;
+  font-size: 48px;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.service_button {
+  font-weight: bold;
+}
+
+.service-title-pink {
+  color: var(--ng-color-primary);
+  font-weight: 700;
+  font-size: 48px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5em;
+  }
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.service-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  min-width: 80px;
+  border-radius: 0px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.sub-category {
+  color: var(--ng-color-primary);
+  font-family: $font-family;
+  font-size: 12px;
+}
+
+.package-name {
+  color: var(--white-10);
+  font-family: $font-family;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.package-description {
+  color: var(--white-20);
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 500;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+}
+
+.order-package {
+  color: var(--ng-color-primary);
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.display-duration {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white-40);
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.package-owl {
+  position: relative;
+}
+
+.shop-owl {
+  position: relative;
+}
+
+.team-member {
+  font-family: $font-family;
+  font-size: 14px;
+  font-weight: 400;
+  color: #888888;
+  gap: 5px;
+}
+
+.category-type {
+  border-radius: 6px;
+  border: 1px solid #e2e2e2;
+  color: #686868;
+  padding: 12px 28px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    padding: 0.52em 0.7rem;
+    min-width: 6rem;
+  }
+
+  &:hover {
+    color: #fff;
+    background-color: var(--ng-color-primary);
+  }
+
+  &:active {
+    color: #fff;
+    background-color: var(--ng-color-primary);
+  }
+
+  &.active {
+    color: #fff;
+    background-color: var(--ng-color-primary);
+  }
+}
+
+.products_card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #e2e2e2;
+  border-radius: 12px;
+  width: 25rem;
+  height: 19rem;
+
+  /*    img {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+  } */
+  &_img {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-size: contain;
+    background-position: center;
+    margin-bottom: 1em;
+    border-radius: 12px 12px 0 0;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+  }
+  /*   &_img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+    height: 15rem;
+
+    svg {
+      position: absolute;
+      top: 5%;
+      right: 20%;
+    }
+  } */
+
+  &_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+    &_pricing {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    p {
+      font-size: 1rem !important;
+      font-weight: bold;
+    }
+  }
+
+  &_content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    margin-left: 0.1rem;
+    padding-left: 0.5rem;
+
+    button {
+      padding: 0.5rem 2rem;
+      font-weight: bold;
+      color: #fff;
+      background-color: #9c0278;
+      border: 0;
+    }
+  }
+}
+
+.review_title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  &_principal {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.review_container {
+  &_select {
+    display: flex;
+    align-items: center;
+    padding-bottom: 2rem;
+    position: relative;
+    cursor: pointer;
+
+    &_options {
+      background-color: #fff;
+      border: 2px solid #d6d6d6;
+      position: absolute;
+      top: 3rem;
+      z-index: 10;
+      width: 8rem;
+      padding: 0.5rem 0.5rem;
+     left: -.3%;
+    }
+
+    &_select {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      gap: 0.5rem;
+      padding: 0.3rem 0.5rem;
+    }
+  }
+
+  &_card {
+    display: flex;
+    background-color: #fff;
+    padding: 1.5rem;
+    padding-top: 2rem;
+    border: 2px solid #d6d6d6;
+    border-radius: 0.7rem;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    &_content_rating {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &_title {
+      font-size: 0.8rem;
+    }
+
+    &_info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      img {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .service_card_img {
+    width: 100%;
+  }
+
+  .overview_container_mobile {
+    display: flex;
+    flex-direction: column !important;
+    font-size: 0.5rem;
+
+    .about-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    &_dayofweek {
+      gap: 0.5rem;
+      font-size: 0.8rem;
+
+      div {
+        display: flex;
+      }
+    }
+  }
+  .review_container {
+    &_select {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 2rem;
+      position: relative;
+      cursor: pointer;
+
+      &_options {
+        background-color: #fff;
+        border: 2px solid #d6d6d6;
+        position: absolute;
+        top: 3.1rem;
+        z-index: 10;
+        width: 12.5rem;
+        padding: 0.5rem 0.5rem;
+        left: 24%;
+      }
+
+      &_select {
+        display: flex;
+        align-items: center;
+        background-color: #fff;
+        gap: 0.5rem;
+        padding: 0.3rem 0.5rem;
+      }
+    }
+
+    &_card {
+      display: flex;
+      background-color: #fff;
+      padding: 1.5rem;
+      padding-top: 2rem;
+      border: 2px solid #d6d6d6;
+      border-radius: 0.7rem;
+      flex-direction: column;
+      gap: 0.8rem;
+
+      &_content_rating {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      &_title {
+        font-size: 0.8rem;
+      }
+
+      &_info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        img {
+          width: 3rem;
+          height: 3rem;
+          border-radius: 100%;
+        }
+      }
+    }
+  }
+
+  .salom_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #e2e2e2;
+    border-radius: 12px;
+    width: 85%;
+    height: 100%;
+    padding: 1rem;
+    margin-left: 0.1rem;
+
+    .salom_card_img {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 11rem;
+      background-size: cover;
+      border-radius: 12px;
+    }
+
+    &_content {
+      width: 100%;
+      p {
+        font-size: 1.3rem;
+        font-weight: bold;
+      }
+    }
+
+    &_info {
+      display: flex;
+      flex-direction: column;
+
+      width: 100%;
+      span {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .products_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #e2e2e2;
+    border-radius: 12px;
+    width: 25rem;
+    height: 19rem;
+
+    /*    img {
+      width: 100%;
+      height: 80%;
+      object-fit: cover;
+    } */
+    &_img {
+      width: 100%;
+      height: 70%;
+      z-index: 999;
+      background-size: cover;
+      margin-bottom: 1em;
+      border-radius: 12px 12px 0 0;
+    }
+    /*   &_img {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 1rem;
+      height: 15rem;
+
+      svg {
+        position: absolute;
+        top: 5%;
+        right: 20%;
+      }
+    } */
+
+    &_info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+
+      &_pricing {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      p {
+        font-size: 1rem !important;
+        font-weight: bold;
+      }
+    }
+
+    &_content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding-right: 1rem;
+      padding-bottom: 1rem;
+      margin-left: 0.1rem;
+      padding-left: 0.5rem;
+
+      button {
+        padding: 0.5rem 2rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #9c0278;
+        border: 0;
+      }
+    }
+  }
+
+  .service_button {
+    border-radius: 8px !important;
+  }
+
+  .initia-price {
+    color: var(--Red, #de1111) !important;
+  }
+
+  .salom_title {
+    flex-direction: column;
+    h5 {
+      font-size: 2.7rem;
+    }
+  }
+
+  .salon-button {
+    margin-left: -0.5rem;
+  }
+
+  .salon-info {
+    flex-direction: column;
+    align-items: stretch !important;
+    justify-content: start !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .salon-info-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch !important;
+    justify-content: start !important;
+
+    margin-top: 1rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .costumer-status {
+    margin-left: 0 !important;
+
+    p {
+      font-size: 0.8rem;
+    }
+  }
+
+  .user-avatar {
+    display: flex;
+  }
+
+  .owl-carousel-o .owl-item:first-child {
+    width: 100px; /* Ajuste conforme necessário */
+  }
+}

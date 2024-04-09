@@ -1,0 +1,826 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<div *ngIf="apiCalled == true && haveData == true">
+  <div class="main-container">
+    <div class="services_container">
+      <p class="services_container_title service-title">
+        {{ util.translate("Get The Best Salon Services In London!") }}
+      </p>
+    </div>
+    <div class="slider_row">
+      <!-- *ngIf="banners?.length" -->
+      <div class="container" style="width: 100%">
+        <div class="container slider-owl">
+          <owl-carousel-o [options]="categoryOption">
+            <ng-template carouselSlide>
+              <div
+                style="
+                  height: 18rem;
+                  width: 100%;
+                  background-size: cover;
+                  border-radius: 12px;
+                  background-image: url('assets/imgs/BeuatyTrat.jpg');
+                "
+                class="slider_back"
+              >
+                <div class="treat-overlay">
+                  <label class="treat-label"
+                    >{{
+                      "Beauty Treatments" > 25
+                        ? ("Beauty Treatments" | slice : 0 : 25) + ".."
+                        : "Beauty Treatments"
+                    }}
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template carouselSlide>
+              <div class="overflow-hidden">
+                <div
+                  style="
+                    height: 18rem;
+                    width: 100%;
+                    background-size: cover;
+                    border-radius: 12px;
+                    background-image: url('assets/imgs/message.jpg');
+                  "
+                  class="slider_back"
+                >
+                  <div class="treat-overlay">
+                    <label class="treat-label">{{ "Massage" }} </label>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </owl-carousel-o>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="category_mobile_container container"
+      style="margin-top: 100px"
+      *ngIf="categoryList?.length"
+    >
+      <div
+        class="category_mobile_container_text d-flex align-items-center justify-content-center gap-5 mb-5"
+      >
+        <div class="line-bar"></div>
+        <p class="service-title">
+          {{ util.translate("Treatments") }}
+        </p>
+        <div class="line-bar"></div>
+      </div>
+
+      <div class="slider_row">
+        <div class="container category-owl" style="width: 100%">
+          <owl-carousel-o
+            [options]="categoryOption"
+            (dragging)="onCarrouselDrag($event.dragging)"
+          >
+            <ng-container *ngFor="let item of categoryList">
+              <ng-template carouselSlide>
+                <div
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                  (click)="onServiceListing(item.id, item.name)"
+                  style="
+                    height: 180px;
+                    width: 100%;
+                    background-size: cover;
+                    border-radius: 12px;
+                  "
+                  class="slider_back"
+                >
+                  <div class="treat-overlay">
+                    <label class="treat-label"
+                      >{{
+                        item.name.length > 25
+                          ? (item.name | slice : 0 : 25) + ".."
+                          : item.name
+                      }}
+                    </label>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </owl-carousel-o>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="latest_salons_container"
+      style="margin-top: 250px"
+      *ngIf="salonList.length > 0"
+    >
+      <div
+        class="latest_salons_title d-flex align-items-center justify-content-center gap-5 mb-5"
+      >
+        <div class="line-bar-pink"></div>
+        <p class="service-title-pink">
+          {{ util.translate("Latest Salons") }}
+        </p>
+        <div class="line-bar-pink"></div>
+      </div>
+
+      <div class="slider_row">
+        <div class="container category-owl" style="width: 100%">
+          <owl-carousel-o
+            [options]="productOption"
+            (dragging)="onCarrouselDrag($event.dragging)"
+          >
+            <ng-container *ngFor="let item of salonList">
+              <ng-template carouselSlide>
+                <div
+                  class=""
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-bottom: 50px;
+                  "
+                >
+                  <div
+                    class="salom_card"
+                    (click)="onSalon(item.uid, item.name)"
+                  >
+                    <div
+                      class="salom_card_img"
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.cover +
+                          '),url(assets/images/placeholder.jpg)'
+                      }"
+                    ></div>
+                    <div class="salom_card_content">
+                      <p class="salom_card_title">
+                        {{
+                          item.name.length > 20
+                            ? (item.name | slice : 0 : 20) + "..."
+                            : item.name
+                        }}
+                      </p>
+                      <div class="" style="">
+                        <div class="salom_card_info">
+                          <div class="salom_card_subcategories">
+                            <!-- <span
+                              *ngFor="
+                                let cates of item.categories;
+                                let j = index
+                              "
+                            >
+                              {{ cates.name }}
+                              <span *ngIf="item.categories.length - 1 != j"
+                                >&</span
+                              >
+                            </span> -->
+                            <span
+                              *ngFor="
+                                let cates of item.categories;
+                                let j = index
+                              "
+                            >
+                              <ng-container *ngIf="j < 3">
+                                {{ cates.name }}
+                                <span
+                                  *ngIf="
+                                    item.categories.length - 1 != j && j < 2
+                                  "
+                                >
+                                  &
+                                </span>
+                              </ng-container>
+                            </span>
+                          </div>
+                          <div
+                            class=""
+                            style="
+                              font-size: 14px;
+                              color: #555555;
+                              display: flex;
+                              gap: 0.5rem;
+                              font-family: Poppins, sans-serif !important;
+                            "
+                          >
+                            <mdb-icon
+                              fas
+                              icon="map-marker-alt"
+                              size="25"
+                              style="color: #99047a"
+                            >
+                            </mdb-icon>
+                            {{ item.address }}
+                          </div>
+
+                          <div class="d-flex" style="gap: 0.3rem">
+                            <mdb-icon
+                              fas
+                              icon="star"
+                              size="sm"
+                              [ngStyle]="{
+                                color: item.rating >= 1 ? 'orange' : 'grey'
+                              }"
+                            >
+                            </mdb-icon>
+                            <mdb-icon
+                              fas
+                              icon="star"
+                              size="sm"
+                              [ngStyle]="{
+                                color: item.rating >= 2 ? 'orange' : 'grey'
+                              }"
+                            >
+                            </mdb-icon>
+                            <mdb-icon
+                              fas
+                              icon="star"
+                              size="sm"
+                              [ngStyle]="{
+                                color: item.rating >= 3 ? 'orange' : 'grey'
+                              }"
+                            >
+                            </mdb-icon>
+                            <mdb-icon
+                              fas
+                              icon="star"
+                              size="sm"
+                              [ngStyle]="{
+                                color: item.rating >= 4 ? 'orange' : 'grey'
+                              }"
+                            >
+                            </mdb-icon>
+                            <mdb-icon
+                              fas
+                              icon="star"
+                              size="sm"
+                              [ngStyle]="{
+                                color: item.rating >= 5 ? 'orange' : 'grey'
+                              }"
+                            >
+                            </mdb-icon>
+                            <h6
+                              class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1"
+                            >
+                              {{ item.total_rating }}
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </owl-carousel-o>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="mobile_beauticans_container container"
+      style="margin-top: 250px; margin-bottom: 100px"
+      *ngIf="freelancerList.length > 0"
+    >
+      <div
+        class="mobile_beauticans d-flex align-items-center justify-content-center mb-5"
+      >
+        <div class="line-bar"></div>
+        <p class="mobile_beauticans_title service-title">
+          {{ util.translate("Latest Mobile Beauticians") }}
+        </p>
+        <div class="line-bar"></div>
+      </div>
+
+      <div class="slider_row">
+        <div
+          class="container category-owl"
+          style="width: 100%; margin-bottom: 100px"
+        >
+          <owl-carousel-o
+            [options]="productOption"
+            (dragging)="onCarrouselDrag($event.dragging)"
+          >
+            <ng-container *ngFor="let item of freelancerList | slice : 0 : 8">
+              <ng-template carouselSlide>
+                <div
+                  class=""
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  "
+                >
+                  <div
+                    class="lmb_salom_card"
+                    (click)="
+                      onFreelancerDetail(
+                        item.uid,
+                        item.userInfo.first_name + '' + item.userInfo.last_name
+                      )
+                    "
+                  >
+                    <div
+                      class="lmb_salom_card_img"
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.userInfo.cover +
+                          '),url(assets/images/placeholder.jpg)'
+                      }"
+                    ></div>
+                    <div class="lmb_salom_card_content">
+                      <p>
+                        {{
+                          item.userInfo.first_name +
+                            " " +
+                            item.userInfo.last_name
+                        }}
+                      </p>
+
+                      <div class="lmb_salom_card_info">
+                        <div class="lmb_salom_card_subcategories">
+                          <span
+                            *ngFor="let cates of item.categories; let j = index"
+                          >
+                            {{ cates.name }}
+                            <span *ngIf="item.categories.length - 1 != j"
+                              >&</span
+                            >
+                          </span>
+                        </div>
+
+                        <div class="d-flex" style="gap: 0.3rem">
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 1 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 2 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 3 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 4 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 5 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <h6
+                            class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1"
+                          >
+                            ({{ item.total_rating || 0 }})
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+          </owl-carousel-o>
+        </div>
+      </div>
+      <!--
+      <div class="container shop-owl">
+        <owl-carousel-o [options]="nearbySliderOptions">
+          <ng-container *ngFor="let item of freelancerList | slice : 0 : 8">
+            <ng-template carouselSlide>
+              <div
+                class="px-0 rounded overflow-hidden shadow-sm animate"
+                style="max-width: 425px"
+              >
+                <a
+                  class="text-dark"
+                  (click)="
+                    onFreelancerDetail(
+                      item.uid,
+                      item.userInfo.first_name + ' ' + item.userInfo.last_name
+                    )
+                  "
+                >
+                  <div class="service-list pb-2">
+                    <div
+                      style="border-radius: 12px"
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.userInfo.cover +
+                          '),url(assets/images/placeholder.png)'
+                      }"
+                      class="bg-img mb-3"
+                    ></div>
+                    <h6
+                      class="text-black ff-medium px-2 text-overflow salon-head-text"
+                    >
+                      {{
+                        item.userInfo.first_name + " " + item.userInfo.last_name
+                      }}
+                    </h6>
+
+                    <div class="px-2" style="font-size: 16px; color: #555555">
+                      <span
+                        *ngFor="let cates of item.categories; let j = index"
+                      >
+                        {{ cates.name }}
+                        <span *ngIf="item.categories.length - 1 != j">&</span>
+                      </span>
+                    </div>
+
+                    <div
+                      class="px-2 mt-2"
+                      style="font-size: 14px; color: #555555"
+                      *ngIf="item.address != null && item.address != ''"
+                    >
+                      <mdb-icon
+                        fas
+                        icon="map-marker-alt"
+                        size="xl"
+                        style="color: #99047a"
+                      >
+                      </mdb-icon>
+                      {{ item.address }}
+                    </div>
+
+                    <div class="d-flex align-item-center mt-2 mb-2 px-2">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.rating }} ( {{ item.total_rating }} )
+                      </h6>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div> -->
+    </div>
+
+    <!-- <div class="container">
+      <div class="my-5">
+        <h1
+          class="h5 ff-medium f-third text-center"
+          style="font-size: 25px !important"
+        >
+          {{ util.translate("Latest Products") }}
+        </h1>
+      </div>
+
+      <div class="row">
+        <div
+          class="col-6 col-md-4 col-lg-3 my-2 px-2"
+          *ngFor="let item of productList | slice : 0 : 8; let i = index"
+        >
+          <div class="px-0 rounded overflow-hidden shadow-sm animate border">
+            <a class="text-dark">
+              <div class="product-list text-center pb-3">
+                <div
+                  (click)="onProductDetail(item.id)"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.png)'
+                  }"
+                  class="bg-img mb-3"
+                ></div>
+                <h6
+                  class="text-black ff-medium px-2 text-overflow head-text"
+                  (click)="onProductDetail(item.id)"
+                >
+                  {{ item.name }}
+                </h6>
+
+                <div
+                  class="d-flex justify-content-center align-item-center mb-2"
+                  (click)="onProductDetail(item.id)"
+                >
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{ color: item.rating >= 1 ? 'orange' : 'grey' }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{ color: item.rating >= 2 ? 'orange' : 'grey' }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{ color: item.rating >= 3 ? 'orange' : 'grey' }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{ color: item.rating >= 4 ? 'orange' : 'grey' }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{ color: item.rating >= 5 ? 'orange' : 'grey' }"
+                  >
+                  </mdb-icon>
+                  <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                    {{ item.total_rating }}
+                  </h6>
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center mx-3"
+                  (click)="onProductDetail(item.id)"
+                >
+                  <h6 class="h6 mb-0 small pr-3 text-muted">
+                    <del>
+                      <span *ngIf="util.currencySide == 'left'">
+                        {{ util.currencySymbol }}{{ item.original_price }}
+                      </span>
+                      <span *ngIf="util.currencySide == 'right'">
+                        {{ item.original_price }}{{ util.currencySymbol }}
+                      </span>
+                    </del>
+                  </h6>
+
+                  <h6 class="f-primary mb-0">
+                    <span
+                      class="ff-bold head-text"
+                      *ngIf="util.currencySide == 'left'"
+                    >
+                      {{ util.currencySymbol }}{{ item.sell_price }}
+                    </span>
+                    <span
+                      class="ff-bold head-text"
+                      *ngIf="util.currencySide == 'right'"
+                    >
+                      {{ item.sell_price }}{{ util.currencySymbol }}
+                    </span>
+                  </h6>
+                </div>
+
+                <button
+                  type="button"
+                  mdbBtn
+                  (click)="addToCart(i)"
+                  *ngIf="item.quantity == 0"
+                  class="rounded text-white m-0 mt-2 py-2 px-3 btn-color"
+                  mdbWavesEffect
+                >
+                  {{ util.translate("ADD") }}
+                </button>
+
+                <div
+                  class="qty_flex my-2"
+                  *ngIf="productCart.itemId.includes(item.id)"
+                >
+                  <div class="round_btn" (click)="remove(i)">
+                    <mdb-icon fas icon="minus"></mdb-icon>
+                  </div>
+                  <h6 class="m-0 ff-medium px-2">{{ item.quantity }}</h6>
+                  <div class="round_btn" (click)="add(i)">
+                    <mdb-icon fas icon="plus"></mdb-icon>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
+
+  <div *ngIf="apiCalled == false" class="container">
+    <ngx-skeleton-loader
+      appearance="line"
+      [theme]="{ height: '20px', width: '150px' }"
+    >
+    </ngx-skeleton-loader>
+
+    <div class="flexed">
+      <div *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ 'border-radius': '5px', height: '120px', width: '180px' }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+
+    <ngx-skeleton-loader
+      appearance="line"
+      [theme]="{ height: '20px', width: '150px' }"
+    >
+    </ngx-skeleton-loader>
+
+    <div class="flexed">
+      <div *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ 'border-radius': '50%', height: '120px', width: '120px' }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+
+    <ngx-skeleton-loader
+      appearance="line"
+      [theme]="{ height: '20px', width: '150px' }"
+    >
+    </ngx-skeleton-loader>
+
+    <div class="col-12 normalClass">
+      <div class="filters">
+        <label>
+          <ngx-skeleton-loader
+            appearance="line"
+            [theme]="{ height: '20px', width: '70px' }"
+          >
+          </ngx-skeleton-loader>
+        </label>
+        <label>
+          <ngx-skeleton-loader
+            appearance="line"
+            [theme]="{ height: '20px', width: '70px' }"
+          >
+          </ngx-skeleton-loader>
+        </label>
+        <label>
+          <ngx-skeleton-loader
+            appearance="line"
+            [theme]="{ height: '20px', width: '70px' }"
+          >
+          </ngx-skeleton-loader>
+        </label>
+        <label>
+          <ngx-skeleton-loader
+            appearance="line"
+            [theme]="{ height: '20px', width: '70px' }"
+          >
+          </ngx-skeleton-loader>
+        </label>
+        <label>
+          <ngx-skeleton-loader
+            appearance="line"
+            [theme]="{ height: '20px', width: '70px' }"
+          >
+          </ngx-skeleton-loader>
+        </label>
+      </div>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="row product_div">
+        <div
+          class="pro_col col-lg-4 col-sm-12 col-md-6 col-xs-12"
+          *ngFor="let item of [1, 2, 3, 5, 6]"
+        >
+          <ngx-skeleton-loader
+            appearance="circle"
+            [theme]="{ 'border-radius': '5px', height: '150px', width: '100%' }"
+          >
+          </ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="no_data" *ngIf="haveData == false">
+      <div
+        class="empty"
+        [ngStyle]="{ 'background-image': 'url(assets/nodata.jpg)' }"
+      ></div>
+      <p>
+        {{ util.translate("Opps.. nothing found near") }} {{ getAddressName() }}
+      </p>
+    </div>
+  </div>
+  <!--
+<div style="background: #f5f5f5;">
+  <div class="container" style="padding-top: 65px;padding-bottom: 40px;">
+    <div class="row">
+      <div class="col-lg-6 col-md-12 col-xs-12">
+        <div style="margin-bottom: 20px;flex-direction: column;align-items: center;display: flex;">
+          <div style="padding-right: 30px;">
+            <i class="icofont-island-alt"></i>
+          </div>
+          <div class="media-body" style="text-align: center;flex: 1;">
+            <h4 class="media-heading" style="font-size: 24px!important;">Get Updates &amp; More</h4>
+            <p style="font-size: 16px!important;color: #5e6d77!important;">Thoughtful thoughts to your inbox</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-xs-12">
+        <form action="https://bunitas.co.uk/newsletter/subscribe" class="subcribe-form bravo-subscribe-form bravo-form">
+          <input type="hidden" name="_token" value="l6yNkXDsH3KWWyqfRFB4i4fP7HdjFmP3o1cSvoGr">
+          <div class="form-group newsletter-section" style="display: flex;margin-bottom: 15px;">
+            <input type="text" name="first_name" class="form-control email-input" placeholder="First Name">
+            <input type="text" name="email" class="form-control email-input" placeholder="Your Email">
+            <button type="submit" class="btn-submit">Subscribe</button>
+          </div>
+          <div class="form-mess"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+</div>

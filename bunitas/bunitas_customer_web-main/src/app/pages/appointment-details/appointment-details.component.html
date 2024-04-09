@@ -1,0 +1,647 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<div class="container">
+  <div *ngIf="apiCalled == false">
+    <div *ngFor="let item of [1, 2, 3, 4, 1, 1, 2, 3, 4]">
+      <ngx-skeleton-loader
+        [theme]="{ 'border-radius': '5px', height: '25px', width: '100%' }"
+      >
+      </ngx-skeleton-loader>
+    </div>
+  </div>
+  <div class="main-container" *ngIf="apiCalled == true">
+    <h4 class="order mt-4 mb-2">{{ util.translate("Order Details") }}</h4>
+    <div class="divider">
+      <div class="first-long"></div>
+      <div class="second-dots"></div>
+      <div class="second-dots"></div>
+      <div class="second-dots"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+        <div class="main-box">
+          <div class="rest_details">
+            <div class="basic_details">
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' + api.mediaURL + freelancerCover + ')'
+                }"
+                class="order-image back_image"
+              ></div>
+              <div class="name ml-2">
+                <p class="head-text mb-0">{{ freelancerName }}</p>
+                <p class="order-address">{{ freelancerEmail }}</p>
+              </div>
+            </div>
+            <div class="extra_btns">
+              <label class="track_store" (click)="printInvoice()">
+                {{ util.translate("Print") }}
+              </label>
+            </div>
+          </div>
+          <div>
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Businnes Name: ") }}</h6>
+              <h6 class="ml-auto">
+                {{ freelancerName }}
+              </h6>
+            </div>
+
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Address ") }}</h6>
+              <h6 class="ml-auto">
+                {{ salonAddress }}
+              </h6>
+            </div>
+
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Email") }}</h6>
+              <h6 class="ml-auto">
+                {{ salonEmail }}
+              </h6>
+            </div>
+
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Phone Number") }}</h6>
+              <h6 class="ml-auto">
+                {{ salonNumber }}
+              </h6>
+            </div>
+          </div>
+          <label class="res_location">
+            {{ util.translate("Place of treatment: " + address) }}</label
+          >
+          <label class="res_location">
+            {{
+              util.translate(
+                "Date and Time of treatment: " + this.appointmentDate
+              )
+            }}</label
+          >
+
+          <div
+            class="order-body border-bottom"
+            *ngIf="orders && orders.services && orders.services.length > 0"
+          >
+            <label style="font-size: 14px; font-family: 'bold'">{{
+              util.translate("Treatment(s) list:")
+            }}</label>
+            <br />
+            <div *ngFor="let sub of orders.services" class="mb-3">
+              <div class="d-flex align-items-center">
+                <p
+                  class="item-name text-uppercase"
+                  style="
+                    margin: 0px !important;
+                    font-size: 12px;
+                    font-family: 'bold';
+                  "
+                >
+                  {{ sub.name }}
+                </p>
+                <!-- <p *ngIf="sub.discount == 0" style="margin: 0px !important;">
+                  <span *ngIf="util.currencySide == 'left'"> - {{util.currencySymbol}}{{sub.price}}</span>
+                  <span *ngIf="util.currencySide == 'right'">
+                    - {{sub.price}}{{util.currencySymbol}}</span>
+                </p>
+                <p *ngIf="sub.discount > 0" style="margin: 0px !important;">
+                  <span *ngIf="util.currencySide == 'left'"> - {{util.currencySymbol}}{{sub.off}}</span>
+                  <span *ngIf="util.currencySide == 'right'">
+                    - {{sub.off}}{{util.currencySymbol}}</span>
+                </p> -->
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="order-body border-bottom"
+            *ngIf="orders && orders.packages && orders.packages.length > 0"
+          >
+            <label style="font-size: 14px; font-family: 'bold'">{{
+              util.translate("Packages")
+            }}</label>
+            <br />
+            <div *ngFor="let sub of orders.packages" class="mb-3">
+              <div class="d-flex align-items-center">
+                <div
+                  class="item-name text-uppercase"
+                  style="margin: 0px !important"
+                >
+                  <p style="font-size: 12px; font-family: 'bold'">
+                    {{ sub.name }}
+                  </p>
+                  <p
+                    *ngFor="let subService of sub.services"
+                    style="font-size: 10px"
+                  >
+                    - {{ subService.name }}
+                  </p>
+                </div>
+                <!-- <p *ngIf="sub.discount == 0" style="margin: 0px !important;">
+                  <span *ngIf="util.currencySide == 'left'"> - {{util.currencySymbol}}{{sub.price}}</span>
+                  <span *ngIf="util.currencySide == 'right'">
+                    - {{sub.price}}{{util.currencySymbol}}</span>
+                </p>
+                <p *ngIf="sub.discount > 0" style="margin: 0px !important;">
+                  <span *ngIf="util.currencySide == 'left'"> - {{util.currencySymbol}}{{sub.off}}</span>
+                  <span *ngIf="util.currencySide == 'right'">
+                    - {{sub.off}}{{util.currencySymbol}}</span>
+                </p> -->
+              </div>
+            </div>
+          </div>
+
+          <div class="billing mt-3 border-bottom">
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Service Cost") }}</h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol }}{{ itemTotal }}</span
+                >
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ itemTotal }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-2" *ngIf="this.address != 'Salon'">
+              <h6>{{ util.translate("Distance Charge") }}</h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol
+                  }}{{ serviceAt == 0 ? 0 : distance_cost }}</span
+                >
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ serviceAt == 0 ? 0 : distance_cost
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-2">
+              <h6>{{ util.translate("Total Discount") }}</h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol }}{{ discount }}</span
+                >
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ discount }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-2">
+              <h6 class="bold-text">{{ util.translate("Subtotal") }}</h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol
+                  }}{{
+                    util.getSubTotalPrice(itemTotal, distance_cost, discount)
+                  }}</span
+                >
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ util.getSubTotalPrice(itemTotal, distance_cost, discount)
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-3">
+              <h6>
+                {{
+                  util.translate("Deposit(" + util.general.deposit_now + "%)")
+                }}
+              </h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol }}{{ util.getDepositFee(itemTotal) }}
+                </span>
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ util.getDepositFee(itemTotal)
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-3">
+              <h6>{{ util.translate("Booking Fees") }}</h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol }}{{ util.general.booking_fee }}
+                </span>
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ util.general.booking_fee }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-3">
+              <h6>
+                {{
+                  util.translate(
+                    "Processing Fees(" + util.general.processing_fee + "%)"
+                  )
+                }}
+              </h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol
+                  }}{{ util.getProcessingFee(itemTotal) }}
+                </span>
+                <span *ngIf="util.currencySide == 'right'">
+                  {{ util.getProcessingFee(itemTotal)
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-3">
+              <h6 class="bold-text">
+                {{ util.translate("Paid at checkout") }}
+              </h6>
+              <h6 class="ml-auto">
+                <span *ngIf="util.currencySide == 'left'"
+                  >{{ util.currencySymbol }}{{ paidAtCheckout }}
+                </span>
+                <span *ngIf="util.currencySide == 'right'">
+                  {{
+                    util.getProcessingFee(itemTotal) +
+                      util.general.booking_fee +
+                      util.getDepositFee(itemTotal) | number : "1.0-2"
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+            <div class="d-flex mb-3">
+              <h6 class="bold-text">
+                {{ util.translate("Pay at Salon/Beautician") }}
+              </h6>
+              <h6 class="ml-auto bold-text">
+                <span *ngIf="util.currencySide == 'left'" class="bold-text"
+                  >{{ util.currencySymbol
+                  }}{{
+                    util.getSubTotalPrice(itemTotal, distance_cost, discount) -
+                      util.getDepositFee(itemTotal)
+                  }}</span
+                >
+                <span *ngIf="util.currencySide == 'right'" class="bold-text">
+                  {{
+                    util.getSubTotalPrice(itemTotal, distance_cost, discount) -
+                      util.getDepositFee(itemTotal)
+                  }}{{ util.currencySymbol }}</span
+                >
+              </h6>
+            </div>
+          </div>
+          <div class="d-flex mt-3 mb-2">
+            <h6>{{ util.translate("Appointment ID:") }}</h6>
+            <h6 class="ml-auto">
+              {{ id }}
+            </h6>
+          </div>
+          <div class="d-flex mb-2">
+            <h6>{{ util.translate("PAYMENT") }}</h6>
+            <h6 class="ml-auto">
+              {{ paymentBy[pay_method] }}
+            </h6>
+          </div>
+          <div class="d-flex mb-2">
+            <h6>{{ util.translate("Appointment ON") }}</h6>
+            <h6 class="ml-auto">
+              {{ save_date }}
+            </h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn_div">
+      <div
+        class="rates"
+        mdbWavesEffect
+        *ngIf="status == 4"
+        (click)="presentAlertConfirm()"
+      >
+        {{ util.translate("Rate Appointment") }}
+      </div>
+      <div
+        class="btns"
+        mdbWavesEffect
+        *ngIf="status == 0 || status == 1 || status == 2"
+        (click)="myModal3.show()"
+      >
+        {{ util.translate("Cancel Appointment") }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #ratingModal="mdbModal"
+  class="modal fade right"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div
+    class="modal-dialog modal-full-height modal-right"
+    role="document"
+    style="margin: 0px; padding: 0px; height: 100%"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="ratingModal.hide()"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">
+          {{ util.translate("Rate Your experience") }}
+        </h4>
+      </div>
+      <div class="modal-body location_body" style="overflow: scroll">
+        <div class="main-box">
+          <div class="rest_details">
+            <div class="basic_details">
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' + api.mediaURL + freelancerCover + ')'
+                }"
+                class="order-image back_image"
+              ></div>
+              <div class="name ml-2">
+                <p class="head-text mb-0">{{ freelancerName }}</p>
+                <p class="order-address">{{ freelancerEmail }}</p>
+              </div>
+            </div>
+            <div class="extra_btns">
+              <mdb-icon
+                fas
+                icon="star"
+                (click)="getOwnerRating()"
+                size="sm"
+                style="color: orange; cursor: pointer"
+              >
+              </mdb-icon>
+            </div>
+          </div>
+
+          <div
+            class="order-body"
+            *ngIf="orders && orders.services && orders.services.length > 0"
+          >
+            <label style="font-size: 14px; font-family: 'bold'">{{
+              util.translate("Services")
+            }}</label>
+            <br />
+            <div *ngFor="let sub of orders.services" class="mb-3">
+              <div class="d-flex" style="justify-content: space-between">
+                <p
+                  class="item-name text-uppercase"
+                  style="
+                    margin: 0px !important;
+                    font-size: 12px;
+                    font-family: 'bold';
+                  "
+                >
+                  {{ sub.name }}
+                </p>
+                <mdb-icon
+                  fas
+                  icon="star"
+                  (click)="openServiceRating(sub.id, sub.name, sub.cover)"
+                  size="sm"
+                  style="color: orange; cursor: pointer"
+                >
+                </mdb-icon>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="order-body"
+            *ngIf="orders && orders.packages && orders.packages.length > 0"
+          >
+            <label style="font-size: 14px; font-family: 'bold'">{{
+              util.translate("Packages")
+            }}</label>
+            <br />
+            <div *ngFor="let sub of orders.packages" class="mb-3">
+              <div class="d-flex" style="justify-content: space-between">
+                <div
+                  class="item-name text-uppercase"
+                  style="margin: 0px !important"
+                >
+                  <p style="font-size: 12px; font-family: 'bold'">
+                    {{ sub.name }}
+                  </p>
+                </div>
+                <mdb-icon
+                  fas
+                  icon="star"
+                  size="sm"
+                  (click)="openPackageRating(sub.id, sub.name, sub.cover)"
+                  style="color: orange; cursor: pointer"
+                >
+                </mdb-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #addReviews="mdbModal"
+  class="modal fade left"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <p class="modal-title w-100 font-weight-bold">
+          {{ util.translate("Add Reviews to") }} {{ name }}
+        </p>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="addReviews.hide()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body location_body">
+        <div class="edit_profile">
+          <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div
+                    class="round_image"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' + getProfile() + '),url(assets/icon.png)'
+                    }"
+                  ></div>
+                  <br />
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="RatingBtns">
+                        <i
+                          class="fa-star"
+                          [ngClass]="rate >= 1 ? 'fas' : 'far'"
+                          (click)="rate = 1"
+                        ></i>
+                        <i
+                          class="fa-star"
+                          [ngClass]="rate >= 2 ? 'fas' : 'far'"
+                          (click)="rate = 2"
+                        ></i>
+                        <i
+                          class="fa-star"
+                          [ngClass]="rate >= 3 ? 'fas' : 'far'"
+                          (click)="rate = 3"
+                        ></i>
+                        <i
+                          class="fa-star"
+                          [ngClass]="rate >= 4 ? 'fas' : 'far'"
+                          (click)="rate = 4"
+                        ></i>
+                        <i
+                          class="fa-star"
+                          [ngClass]="rate >= 5 ? 'fas' : 'far'"
+                          (click)="rate = 5"
+                        ></i>
+                      </div>
+                    </div>
+                  </div>
+                  <br />
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <label class="hint_lbl">{{
+                        util.translate("Comments")
+                      }}</label>
+                      <textarea
+                        rows="3"
+                        [(ngModel)]="notes"
+                        mdbInput
+                        id="form1"
+                        class="form-control"
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button
+          mdbBtn
+          color="default"
+          class="waves-light"
+          [disabled]="isLogin"
+          mdbWavesEffect
+          (click)="saveReview()"
+        >
+          <span *ngIf="!isLogin"> {{ util.translate("Continue") }}</span>
+          <div class="spinner-border" *ngIf="isLogin" role="status"></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #myModal3="mdbModal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-danger modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ util.translate("Cancel Reason") }}
+        </h5>
+        <button
+          type="button"
+          class="close"
+          (click)="myModal3.hide()"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body long_content">
+        <div class="card card-profile shadow">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="form-group">
+                  <div class="input-group input-group-alternative">
+                    <select
+                      id="view_count"
+                      [(ngModel)]="cancelReason"
+                      name="view_count"
+                      class="form-select ng-valid ng-dirty ng-touched view-count"
+                      style="width: 100%"
+                    >
+                      <option value="1" selected>Health issues</option>
+                      <option value="2">Personal emergencies</option>
+                      <option value="3">Traffic</option>
+                      <option value="4">Wrong Partner’s address</option>
+                      <option value="5">No-Show</option>
+                      <option value="6">Others</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                (click)="myModal3.hide()"
+              >
+                {{ util.translate("Close") }}
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="changeStatus()"
+              >
+                {{ util.translate("Cancel Appointment") }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

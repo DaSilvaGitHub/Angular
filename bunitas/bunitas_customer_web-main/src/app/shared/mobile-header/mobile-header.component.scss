@@ -1,0 +1,55 @@
+/*
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+*/
+.main_header {
+  position: absolute;
+  width: 100%;
+  background: white;
+  z-index: 99999;
+  padding: 10px 0px;
+  top: 0;
+  .header_items {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand_items {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .state_lbl {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+.location-input {
+  display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #ccc;
+          padding: 0.3rem 0.5em;
+          border-radius: 15px;
+          font-size: 0.8rem;
+          gap: 0.5rem;
+          color: #ccc;
+
+}
+
+.logo_img {
+  width: 2rew;
+  height: 1.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.search-icon{
+  color: #9c0278;
+}

@@ -1,0 +1,452 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<div class="container">
+  <div
+    class="d-flex align-items-center justify-content-center gap-5"
+    [ngStyle]="{
+      'margin-block': util.deviceType !== 'mobile' ? '9rem 3rem' : ' 7rem 0'
+    }"
+  >
+    <div class="line-bar"></div>
+    <p class="service-title">
+      {{ util.translate("Categories") }}
+    </p>
+    <div class="line-bar"></div>
+  </div>
+
+  <div
+    class="mt-3"
+    [ngStyle]="{
+      'margin-bottom': '15rem'
+    }"
+  >
+    <div class="slider_row" *ngIf="categoryCalled == true">
+      <div
+        class="products_filter"
+        style="margin-bottom: 2rem"
+        *ngIf="util.deviceType !== 'mobile'"
+      >
+        <div
+          class="products_filter_main"
+          *ngFor="let item of categoryList.slice(0, categoryList.length / 2)"
+        >
+          <div
+            class="products_filter_content"
+            (click)="onCateId(item.id)"
+            [ngStyle]="{
+              'border-left': item.id == cateID ? '3px solid #9c0278' : '',
+              background: item.id == cateID ? '#FFF5FD' : ''
+            }"
+          >
+            <p>{{ item.name | titlecase }}</p>
+
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="vuesax/outline/arrow-right">
+                <g id="arrow-right">
+                  <path
+                    id="Vector"
+                    d="M7.42504 17.225C7.26671 17.225 7.10837 17.1667 6.98337 17.0417C6.74171 16.8 6.74171 16.4 6.98337 16.1583L12.4167 10.725C12.8167 10.325 12.8167 9.67502 12.4167 9.27502L6.98337 3.84168C6.74171 3.60002 6.74171 3.20002 6.98337 2.95835C7.22504 2.71668 7.62504 2.71668 7.86671 2.95835L13.3 8.39168C13.725 8.81668 13.9667 9.39168 13.9667 10C13.9667 10.6084 13.7334 11.1834 13.3 11.6084L7.86671 17.0417C7.74171 17.1584 7.58337 17.225 7.42504 17.225Z"
+                    fill="#282828"
+                  />
+                </g>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="container category-owl" style="width: 100%">
+        <owl-carousel-o
+          [options]="categoryOption"
+          [props]="mobileCarrouselProps"
+        >
+          <ng-container *ngFor="let item of categoryList">
+            <ng-template carouselSlide>
+              <div class="overflow-hidden">
+                <div
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                  (click)="onServiceListing(item.id, item.name)"
+                  style="
+                    height: 164px;
+                    width: 100%;
+                    min-width: 100%;
+                    background-size: cover;
+                    border-radius: 12px;
+                  "
+                  class="slider_back"
+                >
+                  <div class="treat-overlay">
+                    <label class="treat-label"
+                      >{{
+                        item.name.length > 25
+                          ? (item.name | slice : 0 : 25) + ".."
+                          : item.name
+                      }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
+    </div>
+
+    <div class="flexed" *ngIf="categoryCalled == false">
+      <div *ngFor="let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">
+        <ngx-skeleton-loader
+          appearance="circle"
+          [theme]="{ 'border-radius': '50%', height: '120px', width: '120px' }"
+        >
+        </ngx-skeleton-loader>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="d-flex align-items-center justify-content-center gap-5"
+    [ngStyle]="{
+      'margin-block': util.deviceType !== 'mobile' ? '1rem 3rem' : ''
+    }"
+    *ngIf="subCategoryList.length > 0"
+  >
+    <div class="line-bar"></div>
+    <p class="service-title">
+      {{ util.translate("Products") }}
+    </p>
+    <div class="line-bar"></div>
+  </div>
+
+  <div class="row mb-4 products" *ngIf="subCategoryList.length > 0">
+    <div class="products_filter" style="margin-bottom: 2rem">
+      <div class="products_filter_main" *ngFor="let item of subCategoryList">
+        <div
+          class="products_filter_content"
+          (click)="onSubCateId(item.id)"
+          [ngStyle]="{
+            'border-left': item.id == subCateID ? '3px solid #9c0278' : '',
+            background: item.id == subCateID ? '#FFF5FD' : ''
+          }"
+        >
+          <p>{{ item.name }}</p>
+
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="vuesax/outline/arrow-right">
+              <g id="arrow-right">
+                <path
+                  id="Vector"
+                  d="M7.42504 17.225C7.26671 17.225 7.10837 17.1667 6.98337 17.0417C6.74171 16.8 6.74171 16.4 6.98337 16.1583L12.4167 10.725C12.8167 10.325 12.8167 9.67502 12.4167 9.27502L6.98337 3.84168C6.74171 3.60002 6.74171 3.20002 6.98337 2.95835C7.22504 2.71668 7.62504 2.71668 7.86671 2.95835L13.3 8.39168C13.725 8.81668 13.9667 9.39168 13.9667 10C13.9667 10.6084 13.7334 11.1834 13.3 11.6084L7.86671 17.0417C7.74171 17.1584 7.58337 17.225 7.42504 17.225Z"
+                  fill="#282828"
+                />
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="slider_row">
+      <div
+        class="container category-owl product-owl related-product-owl"
+        style="width: 100%"
+      >
+        <owl-carousel-o [options]="productOption">
+          <ng-container *ngFor="let item of productList; let i = index">
+            <ng-template carouselSlide [width]="fitContent">
+              <div
+                class=""
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <div class="products_card" (click)="onProductDetail(item.id)">
+                  <div class="products_card_img">
+                    <img [src]="api.mediaURL + item.cover" alt="" />
+                    <div
+                      class="products_card_icon"
+                      [style]="'background-color: ##E2E2E2'"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        (click)="
+                          addToFavorite(item.id); $event.stopPropagation()
+                        "
+                        *ngIf="getProductsFavorite(item.id)"
+                      >
+                        <path
+                          d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                          fill="#99047A"
+                        />
+                      </svg>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        (click)="
+                          addToFavorite(item.id); $event.stopPropagation()
+                        "
+                        *ngIf="!getProductsFavorite(item.id)"
+                      >
+                        <path
+                          d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                          fill="#2b2b2b"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <p
+                    class="products_card_title"
+                    *ngIf="util.deviceType == 'desktop'"
+                  >
+                    {{ item.name | titlecase }}
+                  </p>
+                  <div class="products_card_content">
+                    <div class="products_card_info">
+                      <div class="d-flex align-item-center">
+                        <mdb-icon
+                          fas
+                          icon="star"
+                          size="md"
+                          [ngStyle]="{
+                            color: item.rating >= 1 ? 'orange' : 'grey'
+                          }"
+                        >
+                        </mdb-icon>
+                        <mdb-icon
+                          fas
+                          icon="star"
+                          size="md"
+                          [ngStyle]="{
+                            color: item.rating >= 2 ? 'orange' : 'grey'
+                          }"
+                        >
+                        </mdb-icon>
+                        <mdb-icon
+                          fas
+                          icon="star"
+                          size="md"
+                          [ngStyle]="{
+                            color: item.rating >= 3 ? 'orange' : 'grey'
+                          }"
+                        >
+                        </mdb-icon>
+                        <mdb-icon
+                          fas
+                          icon="star"
+                          size="md"
+                          [ngStyle]="{
+                            color: item.rating >= 4 ? 'orange' : 'grey'
+                          }"
+                        >
+                        </mdb-icon>
+                        <mdb-icon
+                          fas
+                          icon="star"
+                          size="md"
+                          [ngStyle]="{
+                            color: item.rating >= 5 ? 'orange' : 'grey'
+                          }"
+                        >
+                        </mdb-icon>
+                        <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                          {{ item.total_rating }}
+                        </h6>
+                      </div>
+
+                      <div class="products_card_info_pricing">
+                        <div class="products_card_info_price">
+                          <h6 class="">
+                            <del style="color: red">
+                              <span *ngIf="util.currencySide == 'left'">
+                                {{ util.currencySymbol
+                                }}{{ item.original_price }}
+                              </span>
+                              <span *ngIf="util.currencySide == 'right'"
+                                >{{ item.original_price
+                                }}{{ util.currencySymbol }}
+                              </span>
+                            </del>
+                          </h6>
+                        </div>
+                        <div class="products_card_info_price">
+                          <h6 class="">
+                            <span
+                              class="ff-medium head-text"
+                              *ngIf="util.currencySide == 'left'"
+                            >
+                              {{ util.currencySymbol }}{{ item.sell_price }}
+                            </span>
+                            <span
+                              class="ff-medium head-text"
+                              *ngIf="util.currencySide == 'right'"
+                            >
+                              {{ item.sell_price }}{{ util.currencySymbol }}
+                            </span>
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      class="products_card_button"
+                      (click)="addToCart(i); $event.stopPropagation()"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
+
+      <div class="col-lg-9" *ngIf="productsCalled == false">
+        <div class="row">
+          <div
+            class="col-6 col-md-4 col-lg-4 my-2 px-2"
+            *ngFor="let item of [1, 2, 3, 5, 6]"
+          >
+            <ngx-skeleton-loader
+              appearance="circle"
+              [theme]="{
+                'border-radius': '5px',
+                height: '150px',
+                width: '100%'
+              }"
+            >
+            </ngx-skeleton-loader>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div mdbModal #filterModal="mdbModal" class="modal fade right" id="filterModalModalTop" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true" style="z-index: 999999;">
+  <div class="modal-dialog modal-full-height modal-right" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h5 class="modal-title w-100 ff-medium">{{util.translate('Filter & Sort')}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="filterModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <div class="filter">
+            <div class="p-2 my-2 bg-light border-bottom">
+              <h6 class="m-0 pl-2 ff-medium">{{util.translate('SORT BY')}}</h6>
+            </div>
+            <div class="custom-control custom-radio py-2">
+              <input type="radio" class="custom-control-input" id="r1" name="filter" mdbInput>
+              <label class="custom-control-label" for="r1">Top Rated</label>
+            </div>
+            <div class="custom-control custom-radio py-2">
+              <input type="radio" class="custom-control-input" id="r2" name="filter" checked mdbInput>
+              <label class="custom-control-label" for="r2">Cost Low to High</label>
+            </div>
+
+            <div class="custom-control custom-radio py-2">
+              <input type="radio" class="custom-control-input" id="r3" name="filter" mdbInput>
+              <label class="custom-control-label" for="r3">Cost High to Low</label>
+            </div>
+            <div class="custom-control custom-radio py-2">
+              <input type="radio" class="custom-control-input" id="r4" name="filter" mdbInput>
+              <label class="custom-control-label" for="r4">Most Popular</label>
+            </div>
+            <div class="p-2 my-2 bg-light border-bottom">
+              <h6 class="m-0 pl-2 ff-medium">FILTER</h6>
+            </div>
+            <div class="custom-control  custom-checkbox py-2">
+              <input type="checkbox" class="custom-control-input" id="c1" checked="">
+              <label class="custom-control-label w-100" for="c1">Open Slot</label>
+            </div>
+            <div class="custom-control  custom-checkbox py-2">
+              <input type="checkbox" class="custom-control-input" id="c2">
+              <label class="custom-control-label w-100" for="c2">COD available</label>
+            </div>
+            <div class="custom-control  custom-checkbox py-2">
+              <input type="checkbox" class="custom-control-input" id="c3">
+              <label class="custom-control-label w-100" for="c3">Cline bungch</label>
+            </div>
+            <div class="p-2 my-2 bg-light border-bottom">
+              <h6 class="m-0 pl-2 ff-medium">ADDITIONAL FILTERS</h6>
+            </div>
+            <div class="px-3 pt-3">
+              <input type="range" class="custom-range" min="0" max="100" name="">
+              <div class="form-row">
+                <div class="form-group col-6">
+                  <label>Min</label>
+                  <input class="form-control" placeholder="$0" type="number">
+                </div>
+                <div class="form-group text-right col-6">
+                  <label>Max</label>
+                  <input class="form-control" placeholder="$1,0000" type="number">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button mdbBtn color="light" class="waves-light btn-color text-dark"
+          mdbWavesEffect>{{util.translate('Cancel')}}</button>
+        <button mdbBtn class="waves-light btn-color text-white" (click)="filterModal.hide()"
+          mdbWavesEffect>{{util.translate('Save')}}</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+  <div class="fixed_cart" *ngIf="productCart.cart?.length">
+    <div class="container">
+      <div class="flex_cart">
+        <label class="subTotal"
+          >{{ util.translate("Your Order") }} ({{ productCart.cart.length }})
+        </label>
+        <div class="flxer">
+          <label class="subTotal" *ngIf="util.cside == 'left'"
+            >{{ util.translate("Subtotal") }}: {{ util.currecny }}
+            {{ productCart.totalPrice }}</label
+          >
+          <label class="subTotal" *ngIf="util.cside == 'right'"
+            >{{ util.translate("Subtotal") }}: {{ productCart.totalPrice
+            }}{{ util.currecny }}
+          </label>
+          <button mdbBtn class="place_btn" (click)="goToProductCheckout()">
+            {{ util.translate("Checkout") }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

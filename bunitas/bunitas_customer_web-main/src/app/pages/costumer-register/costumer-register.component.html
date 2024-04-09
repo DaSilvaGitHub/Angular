@@ -1,0 +1,127 @@
+<div style="padding-left: 1rem; padding-right: 0.5rem">
+  <header>
+    <img src="assets/logo.png" alt="" srcset="" />
+  </header>
+  <main>
+    <div class="title">
+      <h1>Bunitas For Customer</h1>
+      <p>
+        Tell us a bit about yourself and we'll show you the best beauty experts
+        near you!
+      </p>
+    </div>
+    <div class="form-area">
+      <div class="register-form">
+        <p>*All fields required unless noted</p>
+        <div class="register-form-input">
+          <label for="">*Email</label>
+          <input type="text" [(ngModel)]="registerForm.email" />
+        </div>
+        <div class="register-form-input">
+          <label for="">*Password</label>
+          <input type="password" [(ngModel)]="registerForm.password" />
+        </div>
+        <div class="register-form-input">
+          <label for="">*Password Again</label>
+          <input type="password" [(ngModel)]="confirmPassword" />
+          <label style="color: red" *ngIf="!passwordIsEqual"
+            >*The password need to be equal</label
+          >
+        </div>
+        <div class="register-form-input">
+          <label for="">*Phone Number</label>
+          <input type="text" [(ngModel)]="registerForm.mobile" />
+        </div>
+        <div class="register-form-input">
+          <label for="">*First name</label>
+          <input type="text" [(ngModel)]="registerForm.first_name" />
+        </div>
+        <div class="register-form-input">
+          <label for="">*Last name</label>
+          <input type="text" [(ngModel)]="registerForm.last_name" />
+        </div>
+        <div class="register-form-input">
+          <label for="">*What’s your gender? </label>
+          <select name="" id="" [(ngModel)]="registerForm.gender">
+            <option value="1">Female</option>
+            <option value="0">Male</option>
+            <option value="2">Gender Queer</option>
+            <option value="2">Gender Fluid</option>
+            <option value="2">Transgender</option>
+          </select>
+        </div>
+        <div class="register-form-input">
+          <label for="">*What’s your date of birth?</label>
+          <input type="date" [(ngModel)]="registerForm.dob" />
+        </div>
+        <div class="register-form-input" style="position: relative">
+          <label for="">*In which city are you?</label>
+          <input
+            type="text"
+            [(ngModel)]="registerForm.location"
+            (ngModelChange)="onSearchChange($event)"
+            class="form-control"
+          />
+          <div
+            class="location_list"
+            *ngIf="autocompleteLocationItems.length > 0"
+          >
+            <div
+              class="location_name"
+              *ngFor="let item of autocompleteLocationItems"
+              (click)="selectSearchResult1(item)"
+            >
+              <mdb-icon
+                fas
+                icon="map-marker-alt"
+                style="color: gray; margin-right: 10px"
+              ></mdb-icon>
+              {{ item.description }}
+            </div>
+          </div>
+        </div>
+        <div class="register-form-input">
+          <label for="">Referral Code (Optional)</label>
+          <input type="input" [(ngModel)]="registerForm.referral" />
+        </div>
+
+        <div class="register-form-agreed">
+          <div class="register-form-checkbox">
+            <input
+              type="checkbox"
+              [checked]="registerForm.checkTermsAndCondition"
+              [(ngModel)]="registerForm.checkTermsAndCondition"
+            />
+            <p>Ive read accepted the Terms & conditions</p>
+          </div>
+          <div class="register-form-checkbox">
+            <input
+              type="checkbox"
+              [checked]="registerForm.checkAge"
+              [(ngModel)]="registerForm.checkAge"
+            />
+            <p>I am over 18 years old</p>
+          </div>
+          <div class="register-form-checkbox">
+            <input
+              type="checkbox"
+              [checked]="registerForm.checkUpdate"
+              [(ngModel)]="registerForm.checkUpdate"
+            />
+            <p>
+              I would like to receive the latest news promos and updates from
+              Bunitas. Bunitas does not share or sell your personal information
+              or <a routerLink="/costumer-login"> Login to your account </a>
+            </p>
+          </div>
+        </div>
+
+        <button (click)="onRegister(0)">Join Us Now</button>
+      </div>
+      <div class="form-area-imgs">
+        <img src="/assets/imgs/peoples.png" alt="" srcset="" />
+        <img src="/assets/imgs/peoples.png" alt="" srcset="" />
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,321 @@
+/*
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+*/
+
+//@media (max-width: 768px) {
+  .owl-nav .owl-next {
+    top: 30% !important;
+  }
+
+  .products_filter {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    border-right: 1px solid #e2e2e2;
+    margin-top: 1rem;
+    margin-left: 1.6rem;
+    &_main {
+      padding: 0rem 0.5rem;
+    }
+
+    &_content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+    }
+  }
+
+  .products_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #e2e2e2;
+    border-radius: 12px;
+    width: 100%;
+    height: 25rem !important;
+    padding: 1rem;
+    margin-left: .1rem;
+
+    img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+      aspect-ratio: 1/1;
+    }
+
+    &_img {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 1rem;
+
+      svg{
+        position: absolute;
+        top: 5%;
+        right: 20%;
+      }
+    }
+
+    &_info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+
+      &_pricing {
+        display: flex;
+        gap: 0.3rem;
+      }
+
+      p {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+    }
+
+    &_content {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+
+      button {
+        padding: 0.5rem 2rem;
+        font-weight: bold;
+        color: #fff;
+        background-color: #9c0278;
+        border: 0;
+      }
+    }
+  }
+
+  .mobile-title {
+    position: absolute;
+    top: 5rem;
+  }
+
+  .card-area {
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .card-area:nth-child(1) {
+    margin-top: 1rem;
+  }
+
+  .carousel-cell-img {
+    width: 100%;
+    height: 70%;
+    background-size: cover;
+    background-position: center;
+  }
+  .card {
+    max-width: none;
+    display: flex;
+    justify-content: center;
+    .bg-img {
+      width: 100%;
+      width: 8rem;
+      height: 12rem;
+      background-position: center;
+      margin-left: 11rem;
+    }
+  }
+//}
+
+@media(min-width: 769px){
+  ::ng-deep{
+    .spacer {
+      min-height: 945px;
+    }
+  }
+
+  .service-title {
+    margin-top: 32px;
+  }
+
+  .product-owl {
+    width: 900px !important;
+  }
+
+  .product-owl {
+    owl-carousel-o {
+      ::ng-deep{
+       .owl-stage{
+          .owl-item {
+            width: auto !important;
+          }
+       }
+      }
+    }
+  }
+
+
+
+  .container:first-child {
+    max-width: 100% !important;
+    margin-left: 105px;
+  }
+
+  .slider_row, .row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+
+    > .container {
+      max-width: 100%;
+      margin-left: 24px;
+      padding: 0;
+
+    }
+
+    .products_filter {
+      min-width: 282px;
+      width: 282px;
+      margin-top: 0;
+      padding-top: 20px;
+
+      .products_filter_main {
+        padding: 0;
+      }
+    }
+
+    .products_card {
+      width: 282px;
+      height: 324px;
+      padding: 24px 16px;
+      border-radius: 12px;
+      border: 0.734px solid #E2E2E2;
+      background: #FFF;
+
+      &_img {
+        aspect-ratio: 1 / 1;
+        height: 100%;
+        svg {
+          top: 20px;
+          right: 20px;
+        }
+      }
+
+      .products_card_title {
+        color: #282828;
+        font-size: 20px;
+        text-align: start;
+        width: 100%;
+        min-height: 30px;
+        margin-left: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 150%;
+        margin-bottom: 4px !important;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+
+      .products_card_icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 18px;
+        background: #FFF5FD;
+        cursor: pointer;
+        svg {
+          position: initial;
+        }
+      }
+
+      .products_card_content {
+        p {
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+        .products_card_info {
+          width: 100%;
+          gap: 8px;
+
+          .products_card_info_pricing {
+            display: flex;
+            align-items: center;
+            .products_card_info_price {
+              span {
+                padding-top: 2px;
+                font-family: Poppins, sans-serif !important;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                text-decoration-line: strikethrough;
+              }
+
+              h6 {
+                margin: 0;
+                > span {
+                  font-family: Poppins, sans-serif !important;
+                  color: #282828;
+                  font-size: 18px;
+                  font-style: normal;
+                  font-weight: 600;
+                  line-height: normal;
+                }
+              }
+            }
+          }
+        }
+
+        .products_card_button {
+          border-radius: 8px !important;
+        }
+      }
+    }
+  }
+
+  .products {
+    .slider_row {
+      margin-left: 24px;
+      .container {
+        margin-left: 0px;
+
+      }
+    }
+  }
+
+
+}
+
+.line-bar {
+  width: 48px;
+  height: 2px;
+  background: var(--white-10);
+  margin: 10px 20px;
+}
+
+.service-title {
+  color: var(--white-10);
+  font-weight: 700;
+  font-size: 48px;
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+}

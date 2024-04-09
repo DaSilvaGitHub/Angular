@@ -1,0 +1,1696 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<div
+  mdbModal
+  #addressFromMap="mdbModal"
+  class="modal fade center"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 9999"
+>
+  <div
+    class="modal-dialog modal-notify modal-success modal-dialog-scrollable"
+    role="document"
+  >
+    <!--Content-->
+    <div class="modal-content">
+      <!--Body-->
+      <div class="modal-body">
+        <div #map id="map" class="map"></div>
+        <div>
+          <h3>{{ util.translate("Manage your address(es)") }}</h3>
+          <p>{{ util.translate("Current Localisation") }}</p>
+          <div class="borders">
+            <p class="address">
+              <mdb-icon fas icon="check-circle" color="primary"></mdb-icon>
+              {{
+                address.length > 50
+                  ? (address | slice : 0 : 50) + ".."
+                  : address
+              }}
+            </p>
+            <p class="changeBtn" mdbWavesEffect (click)="changeAddress()">
+              {{ util.translate("Change") }}
+            </p>
+          </div>
+          <div *ngIf="addressSelected == true">
+            <div class="md-form">
+              <input
+                id="house"
+                style="height: auto !important"
+                [(ngModel)]="house"
+                class="form-control"
+                type="text"
+                mdbInput
+              />
+              <label for="house">
+                {{ util.translate("1st Line of address") }}
+              </label>
+            </div>
+            <div class="md-form">
+              <input
+                id="landmark"
+                style="height: auto !important"
+                [(ngModel)]="landmark"
+                class="form-control"
+                type="text"
+                mdbInput
+              />
+              <label for="landmark"> {{ util.translate("Postcode") }} </label>
+            </div>
+            <div class="md-form">
+              <!-- <input id="pincode" style="height: auto !important;" [(ngModel)]="pincode" class="form-control"
+                type="text" mdbInput>
+              <label for="pincode"> {{util.translate('Pincode')}} </label> -->
+            </div>
+
+            <div class="md-form">
+              <select class="browser-default custom-select" [(ngModel)]="title">
+                <option [value]="0">{{ util.translate("HOME") }}</option>
+                <option [value]="1">{{ util.translate("OFFICE") }}</option>
+                <option [value]="2">{{ util.translate("OTHER") }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+      <!--Footer-->
+      <div class="modal-footer justify-content-center">
+        <a
+          type="button"
+          *ngIf="addressSelected == false"
+          mdbBtn
+          class="waves-light primary"
+          mdbWavesEffect
+          (click)="chooseFromMaps()"
+        >
+          {{ util.translate("Confirm and Proceed") }}
+        </a>
+        <a
+          type="button"
+          *ngIf="addressSelected == true && editClicked == false"
+          mdbBtn
+          class="waves-light primary"
+          mdbWavesEffect
+          (click)="addAddress()"
+        >
+          {{ util.translate("Add Address") }}
+        </a>
+        <a
+          type="button"
+          *ngIf="editClicked == true"
+          mdbBtn
+          class="waves-light primary"
+          mdbWavesEffect
+          (click)="editMyAddress()"
+        >
+          {{ util.translate("Edit") }}
+        </a>
+        <a
+          type="button"
+          mdbBtn
+          outline="true"
+          class="waves-light primary"
+          mdbWavesEffect
+          data-dismiss="modal"
+          (click)="addressFromMap.hide()"
+        >
+          {{ util.translate("Cancel") }}
+        </a>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+
+<div
+  mdbModal
+  #changedPlace="mdbModal"
+  class="modal fade center"
+  id="frameModalTop"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myModalLabel"
+  aria-hidden="true"
+  style="z-index: 9999"
+>
+  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+    <!--Content-->
+    <div class="modal-content">
+      <!--Body-->
+
+      <div class="modal-body">
+        <div class="headers">
+          <p class="text">{{ util.translate("Search Location") }}</p>
+          <mdb-icon
+            fas
+            mdbWavesEffect
+            (click)="changedPlace.hide(); addressFromMap.show()"
+            icon="times-circle"
+          >
+          </mdb-icon>
+        </div>
+        <div class="md-form">
+          <input
+            id="cnum"
+            style="height: auto !important"
+            [(ngModel)]="query"
+            [placeholder]="util.translate('Search')"
+            class="form-control"
+            type="text"
+            mdbInput
+            (ngModelChange)="onSearchChange($event)"
+          />
+        </div>
+        <div class="addressList">
+          <div
+            class="select_addr"
+            *ngFor="let item of autocompleteLocationItems"
+            (click)="selectSearchResult1(item)"
+          >
+            <mdb-icon
+              fas
+              icon="map-marker-alt"
+              style="color: gray; margin-right: 10px"
+            ></mdb-icon>
+            {{ item.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="container back_image"
+  [style.backgroundImage]="' url(assets/imgs/back.png) '"
+  *ngIf="util.deviceType == 'desktop'"
+>
+  <div class="overlay">
+    <div class="profiles">
+      <div
+        class="cover"
+        [ngStyle]="{
+          'background-image': 'url(' + getProfile() + '),url(assets/icon.png)'
+        }"
+      ></div>
+      <div class="user_details" *ngIf="util.userInfo">
+        <label class="header"
+          >{{ util.userInfo.first_name + " " + util.userInfo.last_name }}
+        </label>
+        <label class="details">{{ util.userInfo.email }} </label>
+        <label class="details"
+          >{{ util.userInfo.country_code + " " + util.userInfo.mobile }}
+        </label>
+      </div>
+    </div>
+    <div class="more_section">
+      <div class="btn" mdbWavesEffect (click)="editProfileClick = true">
+        {{ util.translate("Edit Profile") }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container main_div">
+  <div class="row">
+    <div
+      class="col-md-3 col-sm-6 col-xs-12"
+      *ngIf="util.deviceType == 'desktop'"
+    >
+      <p class="head">{{ util.translate("Activity") }}</p>
+      <div
+        [ngClass]="tabId == 'profile' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('profile')"
+      >
+        {{ util.translate("Profile") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'address' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('address')"
+      >
+        {{ util.translate("Addresses") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'appointment' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('appointment')"
+      >
+        {{ util.translate("Appointment") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'favorite' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('favorite')"
+      >
+        {{ util.translate("Favorite") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'message' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('message')"
+      >
+        {{ util.translate("Messages") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'product-order' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('product-order')"
+      >
+        {{ util.translate("Orders") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'change-password' ? 'active_btn' : 'normal_btn'"
+        (click)="openLink('change-password')"
+      >
+        {{ util.translate("ChangePassword") }}
+      </div>
+      <div
+        [ngClass]="tabId == 'contact-bunitas' ? 'active_btn' : 'normal_btn'"
+        (click)="pushOutsideLink('contact')"
+      >
+        {{ util.translate("Contact") }}
+      </div>
+    </div>
+    <div class="col-md-9 col-sm-6 col-xs-12">
+      <p class="header" *ngIf="tabId == 'profile'">
+        {{ util.translate("User Informations") }}
+      </p>
+      <p class="header" *ngIf="tabId == 'address'">
+        {{ util.translate("My addresses") }}
+      </p>
+      <p class="header" *ngIf="tabId == 'appointment'">
+        {{ util.translate("Appointment") }}
+      </p>
+      <p class="header" *ngIf="tabId == 'favorite'">
+        {{ util.translate("Favorite") }}
+      </p>
+      <p class="header" *ngIf="tabId == 'product-order'">
+        {{ util.translate("Orders") }}
+      </p>
+      <p class="header" *ngIf="tabId == 'change-password'">
+        {{ util.translate("ChangePassword") }}
+      </p>
+
+      <div *ngIf="tabId == 'profile'">
+        <div class="edit_profile">
+          <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="util.userInfo">
+                  <div
+                    class="round_image"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' + getProfile() + '),url(assets/icon.png)'
+                    }"
+                  >
+                    <label class="green_box" for="file-input">
+                      <mdb-icon
+                        fas
+                        icon="pencil-alt"
+                        class="pencil_icn"
+                      ></mdb-icon>
+                      <input
+                        id="file-input"
+                        (change)="preview_banner($event.target.files)"
+                        type="file"
+                      />
+                    </label>
+                  </div>
+
+                  <label class="title_text">{{
+                    util.userInfo.first_name + " " + util.userInfo.last_name
+                  }}</label>
+
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("First Name")
+                      }}</label>
+                      <input
+                        mdbInput
+                        type="text"
+                        [disabled]="!editProfileClick"
+                        id="form1"
+                        class="form-control"
+                        [(ngModel)]="first_name"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("Last Name")
+                      }}</label>
+                      <input
+                        mdbInput
+                        type="text"
+                        [disabled]="!editProfileClick"
+                        id="form1"
+                        class="form-control"
+                        [(ngModel)]="last_name"
+                      />
+                    </div>
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("Gender")
+                      }}</label>
+                      <select
+                        [(ngModel)]="gender"
+                        [disabled]="!editProfileClick"
+                        type="text"
+                        required
+                        style="border: 1px solid lightgray; width: 100%"
+                      >
+                        <option value="1">{{ util.translate("Male") }}</option>
+                        <option value="0">
+                          {{ util.translate("Female") }}
+                        </option>
+                        <option value="2">
+                          {{ util.translate("Others") }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-lg-6">
+                      <!-- <label class="hint_lbl">{{util.translate('Phone Number')}}</label>
+                      <input mdbInput type="text" [disabled]="!editProfileClick" id="form1" class="form-control"
+                        [(ngModel)]="mobile"> -->
+                      <label class="hint_lbl">{{
+                        util.translate("Phone Number")
+                      }}</label>
+                      <div class="row">
+                        <div class="col-3">
+                          <select
+                            type="text"
+                            name="ccode"
+                            spellcheck="false"
+                            autocapitalize="off"
+                            required
+                            style="border: 1px solid lightgray; width: 100%"
+                          >
+                            <!-- <option *ngFor="let item of util.countrys" [value]="item.dialling_code"> +{{item.dialling_code}}
+                              {{item.country_name}}
+                            </option> -->
+                            <option [value]="+44">+44 United Kingdom</option>
+                          </select>
+                        </div>
+                        <div class="col-9">
+                          <!-- <input [(ngModel)]="mobile" [disabled]="!editProfileClick" type="number"
+                            name="form1" id="form1" spellcheck="false" autocapitalize="off" required
+                            class="form-control" max="10"> -->
+                          <input
+                            mdbInput
+                            type="number"
+                            [disabled]="!editProfileClick"
+                            id="form1"
+                            class="form-control"
+                            (keydown)="handleKeyDown($event)"
+                            min="10000000000"
+                            max="99999999999"
+                            [(ngModel)]="mobile"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      class="col-lg-12"
+                      style="text-align: center"
+                      *ngIf="editProfileClick"
+                    >
+                      <button
+                        mdbBtn
+                        type="button"
+                        class="round_btn"
+                        (click)="updateProfile()"
+                        mdbWavesEffect
+                      >
+                        {{ util.translate("Save") }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2"></div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="tabId == 'appointment'">
+        <div
+          class="card_div"
+          *ngFor="
+            let item of myOrders
+              | paginate : { id: 'pagin1', itemsPerPage: 5, currentPage: page };
+            let i = index
+          "
+          (click)="openAppointments(item.id)"
+        >
+          <div class="resto_detail" *ngIf="item.freelancer_id == 0">
+            <div
+              class="back_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  item.salonInfo.cover +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">{{
+                item.salonInfo.name
+              }}</label>
+            </div>
+          </div>
+
+          <div class="resto_detail" *ngIf="item.salon_id == 0">
+            <div
+              class="back_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  item.individualInfo.background +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">{{
+                item.individualInfo.first_name +
+                  " " +
+                  item.individualInfo.last_name
+              }}</label>
+            </div>
+          </div>
+
+          <div class="line_div"></div>
+          <div class="order_detail">
+            <label
+              class="head_gray"
+              *ngIf="
+                item &&
+                item.items &&
+                item.items.services &&
+                item.items.services.length > 0
+              "
+              >{{ util.translate("Services") }}</label
+            >
+            <div
+              class="small_lbl"
+              *ngIf="
+                item &&
+                item.items &&
+                item.items.services &&
+                item.items.services.length > 0
+              "
+            >
+              <div *ngFor="let sub of item.items.services" class="mb-3">
+                <div class="d-flex align-items-center">
+                  <p
+                    class="item-name text-uppercase"
+                    style="
+                      margin: 0px !important;
+                      font-size: 12px;
+                      font-family: 'bold';
+                    "
+                  >
+                    {{ sub.name }}
+                  </p>
+                  <p *ngIf="sub.discount == 0" style="margin: 0px !important">
+                    <span *ngIf="util.currencySide == 'left'">
+                      - {{ util.currencySymbol }}{{ sub.price }}</span
+                    >
+                    <span *ngIf="util.currencySide == 'right'">
+                      - {{ sub.price }}{{ util.currencySymbol }}</span
+                    >
+                  </p>
+                  <p *ngIf="sub.discount > 0" style="margin: 0px !important">
+                    <span *ngIf="util.currencySide == 'left'">
+                      - {{ util.currencySymbol }}{{ sub.off }}</span
+                    >
+                    <span *ngIf="util.currencySide == 'right'">
+                      - {{ sub.off }}{{ util.currencySymbol }}</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <label
+              class="head_gray"
+              *ngIf="
+                item &&
+                item.items &&
+                item.items.packages &&
+                item.items.packages.length > 0
+              "
+              >{{ util.translate("Packages") }}</label
+            >
+            <div
+              class="small_lbl"
+              *ngIf="
+                item &&
+                item.items &&
+                item.items.packages &&
+                item.items.packages.length > 0
+              "
+            >
+              <div *ngFor="let sub of item.items.packages" class="mb-3">
+                <div class="d-flex align-items-start">
+                  <div
+                    class="item-name text-uppercase"
+                    style="margin: 0px !important"
+                  >
+                    <p style="font-size: 12px; font-family: 'bold'">
+                      {{ sub.name }}
+                    </p>
+                    <p
+                      *ngFor="let subService of sub.services"
+                      style="font-size: 10px"
+                    >
+                      - {{ subService.name }}
+                    </p>
+                  </div>
+                  <p
+                    *ngIf="sub.discount == 0"
+                    style="margin: 0px !important; font-size: 12px"
+                  >
+                    <span
+                      *ngIf="util.currencySide == 'left'"
+                      style="font-family: 'bold'"
+                    >
+                      - {{ util.currencySymbol }}{{ sub.price }}</span
+                    >
+                    <span
+                      *ngIf="util.currencySide == 'right'"
+                      style="font-family: 'bold'"
+                    >
+                      - {{ sub.price }}{{ util.currencySymbol }}</span
+                    >
+                  </p>
+                  <p
+                    *ngIf="sub.discount > 0"
+                    style="margin: 0px !important; font-size: 12px"
+                  >
+                    <span
+                      *ngIf="util.currencySide == 'left'"
+                      style="font-family: 'bold'"
+                    >
+                      - {{ util.currencySymbol }}{{ sub.off }}</span
+                    >
+                    <span
+                      *ngIf="util.currencySide == 'right'"
+                      style="font-family: 'bold'"
+                    >
+                      - {{ sub.off }}{{ util.currencySymbol }}</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <label class="head_gray">{{
+              util.translate("Appointments Date")
+            }}</label>
+            <label class="small_lbl"
+              >{{ getDate(item.save_date) }} {{ item.slot }}
+            </label>
+            <label class="head_gray">{{
+              util.translate("TOTAL AMOUNT")
+            }}</label>
+            <label class="small_lbl" *ngIf="util.cside == 'left'">
+              {{ util.currecny }} {{ item.grand_total }}</label
+            >
+            <label class="small_lbl" *ngIf="util.cside == 'right'">
+              {{ item.grand_total }} {{ util.currecny }}
+            </label>
+          </div>
+
+          <div class="line_div"></div>
+
+          <div class="status_detail" *ngIf="item.status == 4">
+            <div class="deliver_div">
+              {{ util.translate("Completed") }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="item.status == 5 || item.status == 6"
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Appointments is") }}
+              {{ getStatus(item.status) }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="item.status == 7 || item.status == 8"
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Appointments is") }}
+              {{ getStatus(item.status) }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="
+              item.status == 0 ||
+              item.status == 1 ||
+              item.status == 2 ||
+              item.status == 3
+            "
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Appointments is") }}
+              {{ getStatus(item.status) }}
+            </div>
+          </div>
+        </div>
+        <div class="has-text-centered" *ngIf="myOrders?.length">
+          <pagination-controls
+            id="pagin1"
+            (pageChange)="page = $event"
+          ></pagination-controls>
+        </div>
+
+        <div *ngFor="let item of dummy" class="card_div">
+          <div class="resto_detail">
+            <div class="back_image">
+              <ngx-skeleton-loader
+                appearance="circle"
+                [theme]="{
+                  'border-radius': '5px',
+                  height: '50px',
+                  width: '100%'
+                }"
+              >
+              </ngx-skeleton-loader>
+            </div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '120px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+              <label class="res_location" style="margin: 0px">
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '70px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="tabId == 'product-order'">
+        <div
+          class="card_div"
+          *ngFor="
+            let item of orderList
+              | paginate : { id: 'pagin1', itemsPerPage: 5, currentPage: page };
+            let i = index
+          "
+          (click)="openOrderDetails(item.id)"
+        >
+          <div class="resto_detail" *ngIf="item.type == 'individual'">
+            <div
+              class="back_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  item.freelancerInfo.cover +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">{{
+                item.freelancerInfo.first_name +
+                  " " +
+                  item.freelancerInfo.last_name
+              }}</label>
+            </div>
+          </div>
+
+          <div class="resto_detail" *ngIf="item.type == 'salon'">
+            <div
+              class="back_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  item.salonInfo.cover +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">{{
+                item.salonInfo.name
+              }}</label>
+            </div>
+          </div>
+
+          <div class="line_div"></div>
+          <div class="order_detail">
+            <label class="head_gray">{{ util.translate("ITEMS") }}</label>
+            <div class="small_lbl">
+              <div *ngIf="item.orders?.length" class="border_bottom">
+                <p
+                  *ngFor="let order of item.orders; let ol = index"
+                  class="items"
+                >
+                  <span
+                    >{{ order.name }} -
+                    <span *ngIf="order.have_gram == 1">
+                      {{ order.gram }} {{ util.translate("grams") }}
+                    </span>
+                    <span *ngIf="order.have_kg == 1">
+                      {{ order.kg }} {{ util.translate("kg") }}
+                    </span>
+                    <span *ngIf="order.have_liter == 1">
+                      {{ order.liter }} {{ util.translate("ltr") }}
+                    </span>
+                    <span *ngIf="order.have_ml == 1">
+                      {{ order.ml }} {{ util.translate("ml") }}
+                    </span>
+                    <span *ngIf="order.have_pcs == 1">
+                      {{ order.pcs }} {{ util.translate("pcs") }}
+                    </span>
+
+                    <span *ngIf="util.cside == 'left'">
+                      {{ util.currecny }}
+                      {{
+                        order.discount == 0
+                          ? order.original_price
+                          : order.sell_price
+                      }}
+                    </span>
+                    <span *ngIf="util.cside == 'right'">
+                      {{
+                        order.discount == 0
+                          ? order.original_price
+                          : order.sell_price
+                      }}
+                      {{ util.currecny }}
+                    </span>
+                  </span>
+
+                  <span>X {{ order.quantity }}</span>
+                </p>
+                <p class="itemss">
+                  <span>{{ util.translate("Total") }} </span>
+                  <span *ngIf="util.cside == 'left'">
+                    {{ util.currecny }}{{ item.grand_total }}
+                  </span>
+                  <span *ngIf="util.cside == 'right'"
+                    >{{ item.grand_total }} {{ util.currecny }}
+                  </span>
+                </p>
+              </div>
+            </div>
+            <label class="head_gray">{{ util.translate("ORDERED ON") }}</label>
+            <label class="small_lbl">{{ getDate(item.date_time) }} </label>
+            <label class="head_gray">{{
+              util.translate("TOTAL AMOUNT")
+            }}</label>
+            <label class="small_lbl">
+              <span *ngIf="util.cside == 'left'">
+                {{ util.currecny }}{{ item.grand_total }}
+              </span>
+              <span *ngIf="util.cside == 'right'"
+                >{{ item.grand_total }} {{ util.currecny }}
+              </span>
+            </label>
+          </div>
+
+          <div class="line_div"></div>
+
+          <div class="status_detail" *ngIf="item.status == 4">
+            <div class="deliver_div">
+              {{ util.translate("Completed") }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="item.status == 5 || item.status == 6"
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Order is") }} {{ getStatus(item.status) }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="item.status == 7 || item.status == 8"
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Order is") }} {{ getStatus(item.status) }}
+            </div>
+          </div>
+          <div
+            class="status_detail"
+            *ngIf="
+              item.status == 0 ||
+              item.status == 1 ||
+              item.status == 2 ||
+              item.status == 3
+            "
+          >
+            <div class="deliver_div">
+              {{ util.translate("Your Order is") }} {{ getStatus(item.status) }}
+            </div>
+          </div>
+        </div>
+        <div class="has-text-centered" *ngIf="orderList?.length">
+          <pagination-controls
+            id="pagin1"
+            (pageChange)="page = $event"
+          ></pagination-controls>
+        </div>
+
+        <div *ngFor="let item of dummyOrders" class="card_div">
+          <div class="resto_detail">
+            <div class="back_image">
+              <ngx-skeleton-loader
+                appearance="circle"
+                [theme]="{
+                  'border-radius': '5px',
+                  height: '50px',
+                  width: '100%'
+                }"
+              >
+              </ngx-skeleton-loader>
+            </div>
+            <div
+              style="margin-left: 20px; display: flex; flex-direction: column"
+            >
+              <label class="res_name" style="margin: 0px">
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '120px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+              <label class="res_location" style="margin: 0px">
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '70px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="tabId == 'address'">
+        <div class="row">
+          <div
+            class="col-md-4 col-sm-6 col-xs-12 newAddress_card"
+            (click)="addNewAddress()"
+          >
+            <i class="fas fa-plus-circle"></i>
+            <label class="lbl">{{ util.translate("Add New") }}</label>
+          </div>
+          <div
+            class="col-md-4 col-sm-6 col-xs-12 address_card"
+            *ngFor="let item of myaddress"
+          >
+            <p class="title">{{ addressName[item.title] }}</p>
+            <p class="full_address">
+              {{ item.house }} {{ item.landmark }} {{ item.address }}
+            </p>
+            <div class="btns">
+              <label
+                class="editBtn"
+                (click)="editAddress(item)"
+                mdbWavesEffect
+                >{{ util.translate("Edit") }}</label
+              >
+              <label
+                class="delete"
+                (click)="deleteAddress(item)"
+                mdbWavesEffect
+                >{{ util.translate("Delete") }}</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div
+            class="col-md-4 col-sm-6 col-xs-12 address_card"
+            *ngFor="let item of dummyAddress"
+          >
+            <p class="title">
+              <ngx-skeleton-loader
+                appearance="line"
+                [theme]="{ height: '20px', width: '70px' }"
+              >
+              </ngx-skeleton-loader>
+            </p>
+            <p class="full_address">
+              <ngx-skeleton-loader
+                appearance="line"
+                [theme]="{ height: '20px', width: '160px' }"
+              >
+              </ngx-skeleton-loader>
+            </p>
+            <div class="btns">
+              <label class="editBtn" mdbWavesEffect>
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '70px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+              <label class="delete" mdbWavesEffect>
+                <ngx-skeleton-loader
+                  appearance="line"
+                  [theme]="{ height: '20px', width: '70px' }"
+                >
+                </ngx-skeleton-loader>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="tabId == 'change-password'">
+        <div class="edit_profile mt-3">
+          <div class="row">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-12">
+              <div class="row">
+                <div class="col-lg-12" *ngIf="util.userInfo">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("Old Password")
+                      }}</label>
+                      <input
+                        mdbInput
+                        type="password"
+                        id="form1"
+                        class="form-control"
+                        [(ngModel)]="old_password"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("New Password")
+                      }}</label>
+                      <input
+                        mdbInput
+                        type="password"
+                        id="form1"
+                        class="form-control"
+                        [(ngModel)]="new_password"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <label class="hint_lbl">{{
+                        util.translate("Confirm Password")
+                      }}</label>
+                      <input
+                        mdbInput
+                        type="password"
+                        id="form1"
+                        class="form-control"
+                        [(ngModel)]="confirm_password"
+                      />
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div
+                      class="col-lg-6"
+                      style="text-align: center"
+                      *ngIf="editProfileClick"
+                    >
+                      <button
+                        mdbBtn
+                        type="button"
+                        class="round_btn"
+                        [disabled]="changePasswordClicked"
+                        (click)="changePassword()"
+                        mdbWavesEffect
+                      >
+                        {{ util.translate("Update") }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="tabId == 'favorite'">
+        <div class="edit_profile mt-3">
+          <div class="my-5">
+            <h1
+              class="h5 ff-medium f-third text-center"
+              style="font-size: 25px !important"
+            >
+              {{ util.translate("Favorite Salons") }}
+            </h1>
+          </div>
+          <div class="row">
+            <div
+              class="col-6 col-md-4 col-lg-4 my-2 px-2"
+              *ngFor="let item of salonList | slice : 0 : 6"
+            >
+              <div
+                class="px-0 rounded overflow-hidden shadow-sm animate border"
+              >
+                <a class="text-dark" (click)="onSalon(item.uid, item.name)">
+                  <div class="service-list text-center pb-2">
+                    <div
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.cover +
+                          '),url(assets/images/placeholder.png)'
+                      }"
+                      class="bg-img mb-3"
+                    ></div>
+                    <h6
+                      class="text-black ff-medium px-2 text-overflow salon-head-text"
+                    >
+                      {{ item.name }}
+                    </h6>
+
+                    <div style="font-size: 15px">
+                      <span
+                        *ngFor="let cates of item.categories; let j = index"
+                      >
+                        {{ cates.name }}
+                        <span *ngIf="item.categories.length - 1 != j">,</span>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex justify-content-center align-item-center mb-2"
+                    >
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.rating }} ( {{ item.total_rating }} )
+                      </h6>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div
+              class="col-12"
+              *ngIf="salonList.length > 6"
+              style="text-align: right"
+            >
+              <a
+                class="waves-light"
+                (click)="goToAllFavoriteList('salon')"
+                style="
+                  padding: 4px 0px;
+                  color: #9c0278;
+                  text-decoration: underline;
+                "
+              >
+                {{ util.translate("Browser more") }}
+              </a>
+            </div>
+          </div>
+          <div class="my-5">
+            <h1
+              class="h5 ff-medium f-third text-center"
+              style="font-size: 25px !important"
+            >
+              {{ util.translate("Favorite Mobile Beauticians") }}
+            </h1>
+          </div>
+          <div class="row">
+            <div
+              class="col-6 col-md-4 col-lg-4 my-2 px-2"
+              *ngFor="let item of beauticiationList | slice : 0 : 6"
+            >
+              <div
+                class="px-0 rounded overflow-hidden shadow-sm animate border"
+              >
+                <a
+                  class="text-dark"
+                  (click)="
+                    onFreelancerDetail(
+                      item.uid,
+                      item.userInfo.first_name + ' ' + item.userInfo.last_name
+                    )
+                  "
+                >
+                  <div class="service-list text-center pb-2">
+                    <div
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.userInfo.cover +
+                          '),url(assets/images/placeholder.png)'
+                      }"
+                      class="bg-img mb-3"
+                    ></div>
+                    <h6
+                      class="text-black ff-medium px-2 text-overflow head-text"
+                    >
+                      {{
+                        item.userInfo.first_name + " " + item.userInfo.last_name
+                      }}
+                    </h6>
+
+                    <div style="font-size: 12px">
+                      <span
+                        *ngFor="let cates of item.categories; let j = index"
+                      >
+                        {{ cates.name }}
+                        <span *ngIf="item.categories.length - 1 != j">,</span>
+                      </span>
+                    </div>
+                    <div
+                      class="d-flex justify-content-center align-item-center mb-2"
+                    >
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.rating }} ( {{ item.total_rating }} )
+                      </h6>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div
+              class="col-12"
+              *ngIf="beauticiationList.length > 6"
+              style="text-align: right"
+            >
+              <a
+                class="waves-light"
+                (click)="goToAllFavoriteList('beauty')"
+                style="
+                  padding: 4px 0px;
+                  color: #9c0278;
+                  text-decoration: underline;
+                "
+              >
+                {{ util.translate("Browser more") }}
+              </a>
+            </div>
+
+            <div *ngIf="beauticiationList.length == 0">
+              <p>Oops, you dont have any favorite Beauticians</p>
+            </div>
+          </div>
+          <div class="my-5">
+            <h1
+              class="h5 ff-medium f-third text-center"
+              style="font-size: 25px !important"
+            >
+              {{ util.translate("Favorite Products") }}
+            </h1>
+          </div>
+          <div class="row">
+            <div
+              class="col-6 col-md-4 col-lg-4 my-2 px-2"
+              *ngFor="let item of productList | slice : 0 : 6; let i = index"
+            >
+              <div
+                class="px-0 rounded overflow-hidden shadow-sm animate border"
+              >
+                <a class="text-dark">
+                  <div class="product-list text-center pb-3">
+                    <div
+                      (click)="onProductDetail(item.id)"
+                      [ngStyle]="{
+                        'background-image':
+                          'url(' +
+                          api.mediaURL +
+                          item.cover +
+                          '),url(assets/images/placeholder.jpg)'
+                      }"
+                      class="bg-img mb-3"
+                    ></div>
+                    <h5
+                      class="head-text text-black ff-medium px-2 text-overflow"
+                    >
+                      {{ item.name }}
+                    </h5>
+
+                    <div
+                      class="d-flex justify-content-center align-item-center mb-2"
+                    >
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+                    <div
+                      class="d-flex justify-content-center align-items-center mx-3"
+                    >
+                      <h6 class="h6 mb-0 pr-3 text-muted small">
+                        <del>
+                          <span *ngIf="util.currencySide == 'left'">
+                            {{ util.currencySymbol }}{{ item.original_price }}
+                          </span>
+                          <span *ngIf="util.currencySide == 'right'"
+                            >{{ item.original_price }}{{ util.currencySymbol }}
+                          </span>
+                        </del>
+                      </h6>
+                      <h6 class="f-primary mb-0">
+                        <span
+                          class="ff-medium head-text"
+                          *ngIf="util.currencySide == 'left'"
+                        >
+                          {{ util.currencySymbol }}{{ item.sell_price }}
+                        </span>
+                        <span
+                          class="ff-medium head-text"
+                          *ngIf="util.currencySide == 'right'"
+                        >
+                          {{ item.sell_price }}{{ util.currencySymbol }}
+                        </span>
+                      </h6>
+                    </div>
+
+                    <div class="flex">
+                      <button
+                        type="button"
+                        (click)="addToCart(i)"
+                        *ngIf="item.quantity == 0"
+                        mdbBtn
+                        class="rounded text-white m-0 mt-2 py-2 px-4 btn-color"
+                        mdbWavesEffect
+                      >
+                        {{ util.translate("ADD") }}
+                      </button>
+                    </div>
+
+                    <div
+                      class="qty_flex my-2"
+                      *ngIf="productCart.itemId.includes(item.id)"
+                    >
+                      <div class="round_btn" (click)="remove(i)">
+                        <mdb-icon fas icon="minus"></mdb-icon>
+                      </div>
+                      <h6 class="m-0 ff-medium px-2">{{ item.quantity }}</h6>
+                      <div class="round_btn" (click)="add(i)">
+                        <mdb-icon fas icon="plus"></mdb-icon>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div
+              class="col-12"
+              *ngIf="productList.length > 6"
+              style="text-align: right"
+            >
+              <a
+                class="waves-light"
+                (click)="goToAllFavoriteList('product')"
+                style="
+                  padding: 4px 0px;
+                  color: #9c0278;
+                  text-decoration: underline;
+                "
+              >
+                {{ util.translate("Browser more") }}
+              </a>
+            </div>
+            <div *ngIf="productList.length == 0">
+              <p>Oops, you dont have any favorite Beauticians</p>
+            </div>
+          </div>
+
+          <div class="my-5">
+            <h1
+              class="h5 ff-medium f-third text-center"
+              style="font-size: 25px !important"
+            >
+              {{ util.translate("Favorite Treatments") }}
+            </h1>
+          </div>
+          <div class="row" style="gap: 1rem">
+            <p *ngIf="!treatmentsList.length">
+              oops, you don't have any favorite treatment
+            </p>
+            <div
+              class="cart-items bg-white px-2 py-2 border border-2"
+              style="border-radius: 12px; max-width: 40rem"
+              *ngFor="let item of treatmentsList"
+            >
+              <div class="d-flex justify-content-center align-items-center p-0">
+                <a class="service_card_img"
+                  ><img
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.jpg)'
+                    }"
+                    class="service-image"
+                    style="border-radius: 12px"
+                /></a>
+                <!-- <div
+                  class="svg-area"
+                  [style]="{
+                    display: 'flex',
+                    'justify-content': 'right',
+                    'margin-bottom': '7rem',
+                    'margin-left': '19rem',
+                    position: 'absolute',
+                    cursor: 'pointer',
+                    'background-color': 'transparent',
+                    padding: '.5rem',
+                    'border-radius': '100%'
+                  }"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                      fill="#99047A"
+                    />
+                  </svg>
+                </div> -->
+                <a class="ml-3 text-decoration-none w-100">
+                  <p class="head-text">{{ item.name }}</p>
+                  <!--   <p class="sub-text">
+                    {{ item.description }} {{ util.translate("Hour.") }}
+                  </p>
+ -->
+                  <div
+                    class="d-flex align-items-center"
+                    style="margin-bottom: 0.5rem"
+                  >
+                    <p
+                      class="h6 sub-text small m-0 mr-3"
+                      *ngIf="item.discount != null && item.discount != 0"
+                    >
+                      <del style="color: #de1111">
+                        <span *ngIf="util.currencySide == 'left'">
+                          {{ util.currencySymbol }}{{ item.price }}
+                        </span>
+                        <span *ngIf="util.currencySide == 'right'">
+                          {{ item.price }}{{ util.currencySymbol }}
+                        </span>
+                      </del>
+                    </p>
+                    <p class="h6 f-primary m-0">
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'left'"
+                        style="color: #000"
+                      >
+                        {{ util.currencySymbol
+                        }}{{
+                          item.off != null && item.off != 0
+                            ? item.off
+                            : item.price
+                        }}
+                      </span>
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'right'"
+                        style="color: #000"
+                      >
+                        {{
+                          item.discount != null && item.discount != 0
+                            ? item.off
+                            : item.price
+                        }}{{ util.currencySymbol }}
+                      </span>
+                    </p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding-bottom: 2rem" *ngIf="tabId == 'message'">
+        <div class="recent-chats" *ngIf="messageState == 'chats'">
+          <div class="chat" *ngFor="let chat of chats" (click)="onChat(chat)">
+            <div class="row">
+              <div
+                class="chat-img"
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    chat.receiver_cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                *ngIf="chat.receiver_cover != 'NA'"
+              ></div>
+              <div
+                class="chat-img"
+                style="background-image: url(assets/icon.png)"
+                *ngIf="chat.receiver_cover == 'NA' || !chat.receiver_cover"
+              ></div>
+              <div class="chat-text">
+                <p style="font-size: 1rem; font-weight: bold">
+                  {{ chat.receiver_name + " " + chat.receiver_last_name }}
+                </p>
+                <p>{{ chat.last_message }}</p>
+              </div>
+            </div>
+            <div style="display: flex; align-items: start">
+              <p style="font-size: 0.8rem">{{ chat.updated_at }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="on-chat" *ngIf="messageState == 'onMessage'">
+          <div class="on-chat-header">
+            <div
+              class="on-chat-img"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  currentParticipants.receiverCover +
+                  '),url(assets/images/placeholder.jpg)'
+              }"
+              *ngIf="currentParticipants.receiverCover != 'NA'"
+            ></div>
+            <div
+              class="on-chat-img"
+              style="background-image: url(assets/icon.png)"
+              *ngIf="
+                currentParticipants.receiverCover == 'NA' ||
+                !currentParticipants.receiverCover
+              "
+            ></div>
+            <p class="on-chat-receiver-name">
+              {{ currentParticipants.receiverName }}
+            </p>
+          </div>
+          <div class="on-chat-messages">
+            <div class="on-chat-message" *ngFor="let message of chatMessages">
+              <div
+                [ngClass]="
+                  currentParticipants.receiverId ? 'receiver' : 'sender'
+                "
+              >
+                {{ message.message }}
+              </div>
+            </div>
+          </div>
+          <div class="on-chat-input">
+            <input
+              type="text"
+              [(ngModel)]="messageInput"
+              (keydown.enter)="sendMessage()"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="transform: rotate(90deg); cursor: pointer"
+              (click)="sendMessage()"
+            >
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="m3.685 18.783l7.88-14.008a.5.5 0 0 1 .87 0l7.88 14.008a.5.5 0 0 1-.617.71l-7.517-2.922a.5.5 0 0 0-.362 0l-7.517 2.923a.5.5 0 0 1-.617-.711"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

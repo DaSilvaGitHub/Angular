@@ -1,0 +1,81 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<header class="main_header">
+  <div class="container">
+    <div class="header_items">
+      <div class="brand_items">
+        <a class="navbar-brand" (click)="goToHome()">
+          <img src="assets/logo.png" class="logo_img" />
+        </a>
+        <!-- <label class="state_lbl" (click)="util.publishModalPopup('location')">
+          {{getAddress()}} <mdb-icon fas icon="angle-down">
+          </mdb-icon>
+        </label> -->
+      </div>
+      <div
+       class="location-input"
+        (click)="getAddress(); util.publishModalPopup('location')"
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 14 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.14469 7.97016C5.97422 7.97016 5.01807 7.0195 5.01807 5.84354C5.01807 4.66758 5.97422 3.72241 7.14469 3.72241C8.31515 3.72241 9.27131 4.67307 9.27131 5.84903C9.27131 7.02499 8.31515 7.97016 7.14469 7.97016ZM7.14469 4.54668C6.43032 4.54668 5.84234 5.12917 5.84234 5.84903C5.84234 6.5689 6.42482 7.15138 7.14469 7.15138C7.86455 7.15138 8.44703 6.5689 8.44703 5.84903C8.44703 5.12917 7.85905 4.54668 7.14469 4.54668Z"
+            fill="#99047A"
+          />
+          <path
+            d="M7.14478 12.6907C6.3315 12.6907 5.51273 12.3829 4.87529 11.773C3.25422 10.2123 1.46281 7.72304 2.13871 4.76116C2.74867 2.07404 5.0951 0.870605 7.14478 0.870605C7.14478 0.870605 7.14478 0.870605 7.15028 0.870605C9.19997 0.870605 11.5464 2.07404 12.1564 4.76666C12.8268 7.72854 11.0353 10.2123 9.41428 11.773C8.77684 12.3829 7.95807 12.6907 7.14478 12.6907ZM7.14478 1.69488C5.5457 1.69488 3.49052 2.54662 2.9465 4.9425C2.35302 7.53071 3.97958 9.76174 5.45228 11.174C6.40294 12.0917 7.89212 12.0917 8.84278 11.174C10.31 9.76174 11.9365 7.53071 11.3541 4.9425C10.8045 2.54662 8.74387 1.69488 7.14478 1.69488Z"
+            fill="#99047A"
+          />
+        </svg>
+
+        Choose your Location
+        <mdb-icon fas icon="angle-down"> </mdb-icon>
+      </div>
+
+      <div
+        class="menu_btn"
+        mdbWavesEffect
+        (click)="util.publishModalPopup('sideMenu')"
+        style="flex: 0.4; display: flex; justify-content: end"
+      >
+        <svg
+          width="25"
+          height="17"
+          viewBox="0 0 25 17"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M24.875 1.06607C24.875 1.65484 24.3977 2.13214 23.8089 2.13214H1.06607C0.477302 2.13214 0 1.65484 0 1.06607C0 0.477302 0.477302 0 1.06607 0H23.8089C24.3977 0 24.875 0.477302 24.875 1.06607Z"
+            fill="#1C274C"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M24.875 8.17325C24.875 8.762 24.3977 9.23932 23.8089 9.23932H1.06607C0.477302 9.23932 0 8.762 0 8.17325C0 7.58449 0.477302 7.10718 1.06607 7.10718H23.8089C24.3977 7.10718 24.875 7.58449 24.875 8.17325Z"
+            fill="#1C274C"
+          />
+          <path
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M24.875 15.2804C24.875 15.8692 24.3977 16.3465 23.8089 16.3465H1.06607C0.477302 16.3465 0 15.8692 0 15.2804C0 14.6917 0.477302 14.2144 1.06607 14.2144H23.8089C24.3977 14.2144 24.875 14.6917 24.875 15.2804Z"
+            fill="#1C274C"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,3170 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<!-- *ngIf="util.deviceType != 'mobile' -->
+<ngx-spinner type="ball-scale-multiple"></ngx-spinner>
+<div class="salom-content main-content booking-color p-1">
+  <!-- profile -->
+  <div class="container">
+    <div class="bg-white shadow-sm rounded text-center p-3">
+      <div class="salom_title d-flex">
+        <h5 class="salon-name" style="text-align: start">{{ name }}</h5>
+        <!--
+        <div class="d-flex gap-3 salon-button">
+          <button
+            type="button"
+            mdbwaveseffect=""
+            (click)="scrollToServices()"
+            style="width: 195px; font-weight: 600; font-size: 16px"
+            class="border-radius-sm text-white py-3 px-6 btn-color btn ng-star-inserted"
+          >
+            Book Now
+          </button>
+        </div> -->
+      </div>
+      <div class="salon-info d-flex justify-content-between align-items-center">
+        <div class="salon-info-content d-flex align-items-center mt-5 mb-5">
+          <!--      <div class="d-flex user-avatar">
+            <img src="../../../assets/svg/user1.svg" />
+            <img src="../../../assets/svg/user2.svg" />
+            <img src="../../../assets/svg/user3.svg" />
+            <img src="../../../assets/svg/user4.svg" />
+          </div> -->
+          <div
+            class="d-flex costumer-status flex-column ml-4 gap-3 align-items-start"
+          >
+            <p class="fs-6" *ngIf="reviewList.length">
+              {{ "+" + reviewList.length + util.translate(" served") }}
+            </p>
+            <p class="fs-6">No customer(s) served yet!</p>
+            <p class="fs-6">
+              <mdb-icon
+                fas
+                icon="star"
+                size="lg"
+                [ngStyle]="{ color: 'orange' }"
+                class="mr-1"
+              >
+              </mdb-icon
+              >{{ reviewList.length }} {{ util.translate("Reviews") }}
+            </p>
+          </div>
+        </div>
+        <div class="d-flex ls-tight">
+          <mdb-icon
+            fas
+            icon="map-marker-alt"
+            size="lg"
+            style="color: #99047a; margin-right: 8px"
+          >
+          </mdb-icon>
+          <h6
+            class="rf-6 rf-xl-1"
+            style="font-size: 16px; color: #555555; font-size: 0.8rem"
+            (click)="scrollToMap()"
+          >
+            {{ this.address }}
+          </h6>
+        </div>
+      </div>
+
+      <div *ngIf="apiCalled == true">
+        <div class="row gallery-1" *ngIf="gallery.length == 1">
+          <div class="col-sm-6 col-lg-6">
+            <div
+              class="slider_back_cate bg_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  gallery[0] +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+          </div>
+        </div>
+        <div class="row gallery-2" *ngIf="gallery.length == 2">
+          <div class="col-sm-6 col-lg-6">
+            <div
+              class="slider_back_cate bg_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  gallery[0] +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+          </div>
+          <div class="col-sm-6 col-lg-6">
+            <div
+              class="slider_back_cate bg_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  gallery[1] +
+                  '),url(assets/images/placeholder.png)'
+              }"
+            ></div>
+          </div>
+        </div>
+        <div class="row gallery-3" *ngIf="gallery.length > 2">
+          <div class="load-more">
+            <img src="../../../assets/svg/loadMore.svg" />
+          </div>
+          <div class="col-sm-6 col-lg-6">
+            <div class="row sub-row">
+              <div class="col-sm-12" style="padding: 10px">
+                <div
+                  class="slider_back_cate bg_image"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      gallery[0] +
+                      '),url(assets/images/placeholder.png)'
+                  }"
+                  [ngClass]="{ zoomed: isZoomed[0] }"
+                  (click)="toggleZoom(0)"
+                ></div>
+              </div>
+              <div class="col-sm-12" style="padding: 10px">
+                <div
+                  class="slider_back_cate bg_image"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      gallery[1] +
+                      '),url(assets/images/placeholder.png)'
+                  }"
+                  [ngClass]="{ zoomed: isZoomed[1] }"
+                  (click)="toggleZoom(1)"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-6" style="padding: 10px">
+            <div
+              class="slider_back_cate bg_image"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  gallery[2] +
+                  '),url(assets/images/placeholder.png)'
+              }"
+              [ngClass]="{ zoomed: isZoomed[2] }"
+              (click)="toggleZoom(2)"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="apiCalled == false"
+        class="row gx-lg-5 align-items-center justify-content-center"
+      >
+        <div class="spinner-border" role="status"></div>
+      </div>
+    </div>
+  </div>
+  <!-- profile -->
+
+  <!-- Service -->
+  <section
+    class="py-2 service-main-body mt-5"
+    *ngIf="tempServiceList.length > 0"
+    id="servicesScroll"
+  >
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-4">
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Treatments") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+    <!--     <owl-carousel-o [options]="categoryOptions">
+      <ng-container *ngFor="let item of categoryTypes; let i = index">
+        <ng-template carouselSlide >
+          <div class="d-flex mb-3" style="gap: 20px">
+            <div
+              class="category-type"
+              [class]="selectedType == item.id ? 'active' : ''"
+              (click)="handleSeletedType(item.id)"
+            >
+            {{
+              item.name.length > 9
+                ? (item.name | slice : 0 : 9) + "..."
+                : item.name
+            }}
+            </div>
+            </div>
+        </ng-template>
+      </ng-container>
+    </owl-carousel-o>
+ -->
+    <div class="d-flex justify-content-center mb-3" style="gap: 20px">
+      <div
+        *ngFor="let item of categoryTypes"
+        class="category-type"
+        [class]="selectedType == item.id ? 'active' : ''"
+        (click)="handleSeletedType(item.id)"
+      >
+        {{ item.name }}
+      </div>
+    </div>
+    <!-- <div class="container service-grid" *ngIf="util.deviceType == 'desktop'">
+      <div
+        class="service-cart border-radius-sm"
+        *ngFor="let item of tempServiceList; let i = index"
+      >
+        <div
+          class="cart-items bg-white px-2 py-2 border border-2"
+          style="border-radius: 12px"
+        >
+          <div class="d-flex justify-content-center align-items-center p-0">
+            <a
+              ><img
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    item.cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                class="service-image"
+                style="border-radius: 12px"
+            /></a>
+            <a class="ml-3 text-decoration-none w-100">
+              <p class="head-text">{{ item.name }}</p>
+              <p class="sub-category">
+                {{ item.category.name }}
+              </p>
+              <p class="sub-text">
+                {{ item.duration }} {{ util.translate("Hour.") }}
+              </p>
+
+              <div class="d-flex align-items-center">
+                <p
+                  class="inital-price h6 sub-text small m-0 mr-2"
+                  *ngIf="item.discount != null && item.discount != 0"
+                >
+                  <del style="color: #de1111">
+                    <span *ngIf="util.currencySide == 'left'">
+                      {{ util.currencySymbol }}{{ item.price }}
+                    </span>
+                    <span *ngIf="util.currencySide == 'right'">
+                      {{ item.price }}{{ util.currencySymbol }}
+                    </span>
+                  </del>
+                </p>
+                <p class="h6 y m-0" id="promotion">
+                  <span
+                    class="ff-medium head-text"
+                    *ngIf="util.currencySide == 'left'"
+                  >
+                    {{ util.currencySymbol
+                    }}{{
+                      item.off != null && item.off != 0 ? item.off : item.price
+                    }}
+                  </span>
+                  <span
+                    class="ff-medium head-text"
+                    style="color: #000"
+                    *ngIf="util.currencySide == 'right'"
+                  >
+                    {{
+                      item.discount != null && item.discount != 0
+                        ? item.off
+                        : item.price
+                    }}{{ util.currencySymbol }}
+                  </span>
+                </p>
+              </div>
+              <button
+                type="button"
+                mdbwaveseffect=""
+                style="padding: 10px 16px"
+                class="rounded-1 text-white btn-color btn ng-star-inserted"
+                (click)="addService(item, i)"
+              >
+                Add to Cart
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="container nearby-owl">
+      <owl-carousel-o [options]="nearbySliderOptions">
+        <ng-container *ngFor="let item of tempServiceList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class="cart-items bg-white px-2 py-2 border border-2"
+              style="border-radius: 12px; max-width: 25rem"
+            >
+              <div class="d-flex justify-content-center align-items-center p-0">
+                <a class="service_card_img"
+                  ><img
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.jpg)'
+                    }"
+                    class="service-image"
+                    style="border-radius: 12px"
+                /></a>
+                <div
+                  class="svg-area"
+                  [style]="{
+                    display: 'flex',
+                    'justify-content': 'right',
+                    'margin-bottom': '7rem',
+                    'margin-left': '21.5rem',
+                    position: 'absolute',
+                    cursor: 'pointer',
+                    'background-color': getTreatmentFavorite(item.id)
+                      ? '#FFF5FD'
+                      : 'transparent',
+                    padding: '.5rem',
+                    'border-radius': '100%'
+                  }"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    (click)="addTreatmentsToFavorite(item.id)"
+                    *ngIf="getTreatmentFavorite(item.id)"
+                  >
+                    <path
+                      d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                      fill="#99047A"
+                    />
+                  </svg>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    (click)="addTreatmentsToFavorite(item.id)"
+                    *ngIf="!getTreatmentFavorite(item.id)"
+                  >
+                    <path
+                      d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                      fill="#2b2b2b"
+                    />
+                  </svg>
+                </div>
+                <a class="ml-3 text-decoration-none w-100">
+                  <p class="head-text">{{ item.name }}</p>
+                  <p class="sub-category">{{ item.category.name }}</p>
+                  <p class="sub-text">
+                    {{ item.duration }} {{ util.translate("Hour.") }}
+                  </p>
+
+                  <div
+                    class="d-flex align-items-center"
+                    style="margin-bottom: 0.5rem"
+                  >
+                    <p
+                      class="h6 sub-text small m-0 mr-3"
+                      *ngIf="item.discount != null && item.discount != 0"
+                    >
+                      <del style="color: #de1111">
+                        <span *ngIf="util.currencySide == 'left'">
+                          {{ util.currencySymbol }}{{ item.price }}
+                        </span>
+                        <span *ngIf="util.currencySide == 'right'">
+                          {{ item.price }}{{ util.currencySymbol }}
+                        </span>
+                      </del>
+                    </p>
+                    <p class="h6 f-primary m-0">
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'left'"
+                        style="color: #000"
+                      >
+                        {{ util.currencySymbol
+                        }}{{
+                          item.off != null && item.off != 0
+                            ? item.off
+                            : item.price
+                        }}
+                      </span>
+                      <span
+                        class="ff-medium head-text"
+                        *ngIf="util.currencySide == 'right'"
+                        style="color: #000"
+                      >
+                        {{
+                          item.discount != null && item.discount != 0
+                            ? item.off
+                            : item.price
+                        }}{{ util.currencySymbol }}
+                      </span>
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    mdbwaveseffect=""
+                    style="padding: 0.5rem 0.7rem; margin: 0; font-weight: bold"
+                    class="service_button text-white btn-color btn ng-star-inserted"
+                    (click)="addService(item, i)"
+                  >
+                    {{ util.translate("Add to Cart") }}
+                  </button>
+                </a>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+  </section>
+
+  <!-- Package -->
+  <section class="py-2 service-main-body mt-5" *ngIf="packages.length > 0">
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-4">
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Packages") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+
+    <div
+      class="container category-owl"
+      style="width: 100%"
+      *ngIf="util.deviceType != 'desktop'"
+    >
+      <owl-carousel-o [options]="serviceOptions">
+        <ng-container *ngFor="let item of packages; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class="package-detail-img overflow-hidden"
+              style="max-width: 425px"
+            >
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    item.cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                class="package-img"
+              ></div>
+              <div class="d-flex flex-column p-3" style="gap: 10px">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="package-name">{{ item.name }}</div>
+                  <div class="d-flex align-items-center" style="gap: 0.3rem">
+                    <div
+                      style="
+                        color: red;
+                        font-size: 1rem;
+                        text-decoration: line-through;
+                      "
+                    >
+                      {{ util.currencySymbol + "" + item.price }}
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: bold">
+                      {{ util.currencySymbol + "" + item.price }}
+                    </div>
+                  </div>
+                </div>
+                <div class="package-description">{{ item.descriptions }}</div>
+                <div
+                  class="d-flex justify-content-between align-items-center"
+                  *ngFor="let service of item.serviceList"
+                >
+                  <div class="package-description">{{ service.name }}</div>
+                  <div class="package-description">
+                    {{ util.currencySymbol + "" + service.off }}
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <div class="team-member d-flex">
+                    <img
+                      src="../../../assets/svg/frame.svg"
+                      style="width: 20px"
+                    />
+                    <div
+                      *ngFor="let member of item.specialist; let idx = index"
+                    >
+                      <div *ngIf="idx != 0">
+                        {{ " & " + member.first_name + " " + member.last_name }}
+                      </div>
+                      <div *ngIf="idx == 0">
+                        {{ member.first_name + "" + member.last_name + " " }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="display-duration">
+                    <p>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.99999 18.9584C5.05832 18.9584 1.04166 14.9417 1.04166 10C1.04166 5.05835 5.05832 1.04169 9.99999 1.04169C14.9417 1.04169 18.9583 5.05835 18.9583 10C18.9583 14.9417 14.9417 18.9584 9.99999 18.9584ZM9.99999 2.29169C5.74999 2.29169 2.29166 5.75002 2.29166 10C2.29166 14.25 5.74999 17.7084 9.99999 17.7084C14.25 17.7084 17.7083 14.25 17.7083 10C17.7083 5.75002 14.25 2.29169 9.99999 2.29169Z"
+                          fill="#888888"
+                        />
+                        <path
+                          d="M13.0917 13.275C12.9833 13.275 12.875 13.25 12.775 13.1834L10.1917 11.6417C9.55001 11.2584 9.07501 10.4167 9.07501 9.67503V6.25836C9.07501 5.9167 9.35835 5.63336 9.70001 5.63336C10.0417 5.63336 10.325 5.9167 10.325 6.25836V9.67503C10.325 9.97503 10.575 10.4167 10.8333 10.5667L13.4167 12.1084C13.7167 12.2834 13.8083 12.6667 13.6333 12.9667C13.5083 13.1667 13.3 13.275 13.0917 13.275Z"
+                          fill="#888888"
+                        />
+                      </svg>
+                      {{ item.duration + "Hour" }}
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="javascript:;"
+                  class="order-package"
+                  (click)="openPackage(item.id, item.name)"
+                  >Add Package</a
+                >
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+    <div
+      class="container package-owl"
+      style="width: 100%"
+      *ngIf="util.deviceType == 'desktop'"
+    >
+      <owl-carousel-o [options]="packagesOptions">
+        <ng-container *ngFor="let item of packages; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class="package-detail-img overflow-hidden"
+              style="max-width: 425px"
+            >
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    item.cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                ch
+                class="package-img"
+              ></div>
+              <div class="d-flex flex-column p-3" style="gap: 10px">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="package-name">{{ item.name }}</div>
+                  <div class="d-flex align-items-center" style="gap: 0.3rem">
+                    <div
+                      style="
+                        color: red;
+                        font-size: 1rem;
+                        text-decoration: line-through;
+                      "
+                    >
+                      {{ util.currencySymbol + "" + item.price }}
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: bold">
+                      {{ util.currencySymbol + "" + item.price }}
+                    </div>
+                  </div>
+                </div>
+                <div class="package-description">{{ item.descriptions }}</div>
+                <div
+                  class="d-flex justify-content-between align-items-center"
+                  *ngFor="let service of item.serviceList"
+                >
+                  <div class="package-description">{{ service.name }}</div>
+                  <div class="package-description">
+                    {{ util.currencySymbol + "" + service.off }}
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                  <div class="team-member d-flex">
+                    <img
+                      src="../../../assets/svg/frame.svg"
+                      style="width: 20px"
+                    />
+                    <div
+                      *ngFor="let member of item.specialist; let idx = index"
+                    >
+                      <div *ngIf="idx != 0">
+                        {{ " & " + member.first_name + " " + member.last_name }}
+                      </div>
+                      <div *ngIf="idx == 0">
+                        {{ member.first_name + "" + member.last_name + " " }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="display-duration">
+                    <p>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 20 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.99999 18.9584C5.05832 18.9584 1.04166 14.9417 1.04166 10C1.04166 5.05835 5.05832 1.04169 9.99999 1.04169C14.9417 1.04169 18.9583 5.05835 18.9583 10C18.9583 14.9417 14.9417 18.9584 9.99999 18.9584ZM9.99999 2.29169C5.74999 2.29169 2.29166 5.75002 2.29166 10C2.29166 14.25 5.74999 17.7084 9.99999 17.7084C14.25 17.7084 17.7083 14.25 17.7083 10C17.7083 5.75002 14.25 2.29169 9.99999 2.29169Z"
+                          fill="#888888"
+                        />
+                        <path
+                          d="M13.0917 13.275C12.9833 13.275 12.875 13.25 12.775 13.1834L10.1917 11.6417C9.55001 11.2584 9.07501 10.4167 9.07501 9.67503V6.25836C9.07501 5.9167 9.35835 5.63336 9.70001 5.63336C10.0417 5.63336 10.325 5.9167 10.325 6.25836V9.67503C10.325 9.97503 10.575 10.4167 10.8333 10.5667L13.4167 12.1084C13.7167 12.2834 13.8083 12.6667 13.6333 12.9667C13.5083 13.1667 13.3 13.275 13.0917 13.275Z"
+                          fill="#888888"
+                        />
+                      </svg>
+                      {{ item.duration + "Hour" }}
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href="javascript:;"
+                  class="order-package"
+                  (click)="openPackage(item.id, item.name)"
+                  >Add Package</a
+                >
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+  </section>
+
+  <!-- Our Teams -->
+  <!--   <section
+    class="py-2 service-main-body mt-5"
+    *ngIf="specialist.length > 0 && util.deviceType == 'desktop'"
+  >
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-5">
+      <div class="line-bar-pink"></div>
+      <p class="service-title-pink">
+        {{ util.translate("Our Team") }}
+      </p>
+      <div class="line-bar-pink"></div>
+    </div>
+    <div class="container shop-owl">
+      <owl-carousel-o [options]="shopSliderOptions">
+        <ng-container *ngFor="let item of specialist">
+          <ng-template carouselSlide>
+            <div
+              class="overflow-hidden"
+              style="max-width: 15rem; display: flex; flex-direction: column"
+            >
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    item.cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                style="
+                  height: 20rem;
+                  width: 231px;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  border-radius: 12px;
+                "
+              ></div>
+              <div class="d-flex flex-column p-2" style="gap: 10px">
+                <div
+                  class="d-flex justify-content-center align-items-center flex-column"
+                >
+                  <div class="package-name">
+                    {{ item.first_name + " " + item.last_name }}
+                  </div>
+
+                  <div class="social-medias">
+                    <div class="social-media">
+                      <svg
+                        width="18"
+                        height="14"
+                        viewBox="0 0 18 14"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M17.2799 1.86207C16.6695 2.13308 16.0152 2.31505 15.3273 2.39764C16.0294 1.97693 16.5688 1.311 16.8218 0.518607C16.1662 0.907062 15.437 1.18969 14.664 1.34198C14.0445 0.681216 13.1618 0.269531 12.1848 0.269531C10.3084 0.269531 8.78681 1.7898 8.78681 3.66625C8.78681 3.93211 8.81779 4.19151 8.87586 4.44058C6.05214 4.29862 3.54977 2.94613 1.87335 0.890285C1.58039 1.3936 1.41391 1.97693 1.41391 2.59897C1.41391 3.77724 2.01273 4.81742 2.92514 5.42785C2.36763 5.40978 1.84366 5.25621 1.38552 5.00197C1.38552 5.01617 1.38552 5.03036 1.38552 5.04456C1.38552 6.6913 2.55734 8.06315 4.10987 8.37675C3.82595 8.45419 3.52525 8.49549 3.21552 8.49549C2.99612 8.49549 2.78318 8.47484 2.5754 8.43354C3.00903 9.78216 4.26344 10.7668 5.74886 10.794C4.58737 11.7051 3.1226 12.2471 1.53006 12.2471C1.25517 12.2471 0.985449 12.2316 0.720886 12.1994C2.22308 13.1647 4.0092 13.7261 5.92825 13.7261C12.1771 13.7261 15.5945 8.54969 15.5945 4.06116C15.5945 3.91404 15.5906 3.76563 15.5854 3.62108C16.2488 3.14229 16.8243 2.54348 17.2799 1.86207Z"
+                          fill="#333344"
+                        />
+                      </svg>
+                    </div>
+                    <div class="social-media">
+                      <svg
+                        width="10"
+                        height="19"
+                        viewBox="0 0 10 19"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M6.44989 0.430136C5.45545 0.587775 4.75695 0.929361 4.18391 1.5382C3.70145 2.05082 3.40041 2.65225 3.23005 3.44372C3.16571 3.74268 3.15749 3.92335 3.14419 5.33156L3.12948 6.88881H1.76787H0.40625V8.47174V10.0547L1.76175 10.0638L3.11726 10.0729L3.12603 14.1357L3.1348 18.1984H4.75781H6.38082V14.127V10.0555H7.72769C8.46847 10.0555 9.07511 10.0516 9.0758 10.0468C9.16622 9.41305 9.47375 6.93304 9.46415 6.91491C9.45659 6.90053 8.7587 6.88881 7.91332 6.88881H6.3763L6.3879 5.59255C6.3993 4.32476 6.40134 4.29177 6.48118 4.09032C6.64294 3.68223 6.98332 3.44111 7.49151 3.37464C7.63092 3.35641 8.16086 3.34099 8.66915 3.3404L9.59335 3.33932L9.58433 1.92127L9.57532 0.503214L9.12636 0.462116C8.39025 0.394711 6.79369 0.375641 6.44989 0.430136Z"
+                          fill="#333344"
+                        />
+                      </svg>
+                    </div>
+                    <div class="social-media">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M2.26488 0.609467C1.59319 0.753007 1.01411 1.25298 0.781399 1.89031C0.682183 2.16208 0.6482 2.71068 0.712509 3.00201C0.858046 3.66101 1.42062 4.26794 2.07753 4.47461C2.40181 4.57667 2.93945 4.58395 3.22528 4.49021C3.59134 4.37018 3.86387 4.21035 4.09418 3.98072C4.37942 3.69631 4.53651 3.42197 4.63484 3.03647C4.91225 1.949 4.20725 0.841364 3.08813 0.606281C2.78117 0.541797 2.5779 0.542567 2.26488 0.609467ZM10.89 5.2918C10.3566 5.38005 9.97842 5.51773 9.58008 5.76871C9.40314 5.88021 8.97654 6.28615 8.84729 6.46605L8.76836 6.5759L8.76721 6.16212C8.76588 5.69481 8.72573 5.57387 8.53335 5.45761C8.42243 5.39052 8.34002 5.38609 7.20051 5.38598C6.04707 5.38584 5.97984 5.38957 5.86541 5.45966C5.61028 5.61598 5.62627 5.29283 5.62642 10.2981C5.62653 14.7405 5.62775 14.8168 5.69996 14.9341C5.74033 14.9998 5.82751 15.0862 5.89374 15.1262C6.00718 15.1948 6.08183 15.199 7.19057 15.1991C8.47507 15.1993 8.54085 15.1899 8.68074 14.9856C8.7432 14.8944 8.74885 14.7167 8.76714 12.2699C8.78631 9.71009 8.78856 9.64532 8.86842 9.36329C9.06076 8.68404 9.36894 8.26166 9.82775 8.04836C10.0632 7.93895 10.1015 7.93239 10.5021 7.93309C10.8585 7.93371 10.9592 7.94719 11.1273 8.01665C11.6876 8.24825 11.9914 8.75141 12.0877 9.60679C12.1121 9.82401 12.1274 10.9072 12.1274 12.4184C12.1274 14.8099 12.1294 14.8795 12.2006 14.9786C12.353 15.1908 12.4113 15.1993 13.7213 15.1992C15.0364 15.1992 15.0799 15.1926 15.2461 14.9676C15.3219 14.865 15.3225 14.8399 15.3194 12.1481C15.316 9.31722 15.2955 8.82227 15.1527 8.11383C14.9748 7.23219 14.6878 6.64313 14.1964 6.15158C13.7558 5.71096 13.3048 5.46687 12.6815 5.33172C12.3044 5.24999 11.2808 5.22717 10.89 5.2918ZM1.38065 5.45274C1.31143 5.48954 1.2244 5.57581 1.18728 5.64443C1.12297 5.76332 1.11979 5.98175 1.11979 10.2958V14.8223L1.20364 14.9467C1.36883 15.1918 1.41197 15.1992 2.68409 15.1992C3.94465 15.1993 3.9967 15.1911 4.15871 14.9659L4.24108 14.8514V10.291C4.24108 5.95699 4.23776 5.72546 4.17444 5.62964C4.13777 5.5742 4.05465 5.49671 3.98975 5.45746C3.87923 5.39067 3.79612 5.38609 2.68908 5.38598C1.61414 5.38584 1.49505 5.39191 1.38065 5.45274Z"
+                          fill="#333344"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+  </section>
+ -->
+  <!-- Shop -->
+  <section class="py-2 service-main-body mt-5" *ngIf="productList.length > 0">
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-5">
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Products") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+
+    <div
+      class="container package-owl"
+      style="width: 100%"
+      *ngIf="util.deviceType != 'desktop'"
+    >
+      <owl-carousel-o [options]="productOptions">
+        <ng-container *ngFor="let item of productList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class=""
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div class="products_card" (click)="onProductDetail(item.id)">
+                <div
+                  class="products_card_img"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                ></div>
+                <div class="products_card_content">
+                  <div class="products_card_info">
+                    <p>
+                      {{
+                        item.name.length > 8
+                          ? (item.name | slice : 0 : 8) + "..."
+                          : item.name
+                      }}
+                    </p>
+
+                    <div class="d-flex align-item-center">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+
+                    <div class="products_card_info_pricing">
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <del style="color: red">
+                            <span
+                              *ngIf="util.currencySide == 'left'"
+                              style="font-size: 0.9rem"
+                            >
+                              {{ util.currencySymbol }}{{ item.original_price }}
+                            </span>
+                            <span
+                              *ngIf="util.currencySide == 'right'"
+                              style="font-size: 1.1em"
+                              >{{ item.original_price
+                              }}{{ util.currencySymbol }}
+                            </span>
+                          </del>
+                        </h6>
+                      </div>
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'left'"
+                            style="font-size: 1.1rem"
+                          >
+                            {{ util.currencySymbol }}{{ item.sell_price }}
+                          </span>
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'right'"
+                            style="font-size: 1.1rem"
+                          >
+                            {{ item.sell_price }}{{ util.currencySymbol }}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    class="products_card_button"
+                    (click)="addToCart(i)"
+                    *ngIf="item.quantity == 0"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+
+    <div
+      class="container package-owl"
+      style="width: 100%"
+      *ngIf="util.deviceType == 'desktop'"
+    >
+      <owl-carousel-o [options]="productOptions">
+        <ng-container *ngFor="let item of productList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class=""
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div class="products_card" (click)="onProductDetail(item.id)">
+                <div
+                  class="products_card_img"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                ></div>
+                <div class="products_card_content">
+                  <div class="products_card_info">
+                    <p style="font-size: 1.2rem !important">
+                      {{
+                        item.name.length > 9
+                          ? (item.name | slice : 0 : 9) + "..."
+                          : item.name
+                      }}
+                    </p>
+
+                    <div class="d-flex align-item-center">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+
+                    <div class="products_card_info_pricing">
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <del style="color: red">
+                            <span
+                              *ngIf="util.currencySide == 'left'"
+                              style="font-size: 1.2rem"
+                            >
+                              {{ util.currencySymbol }}{{ item.original_price }}
+                            </span>
+                            <span
+                              *ngIf="util.currencySide == 'right'"
+                              style="font-size: 1.2rem"
+                              >{{ item.original_price
+                              }}{{ util.currencySymbol }}
+                            </span>
+                          </del>
+                        </h6>
+                      </div>
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'left'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ util.currencySymbol }}{{ item.sell_price }}
+                          </span>
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'right'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ item.sell_price }}{{ util.currencySymbol }}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div
+                      class="svg-area"
+                      [style]="{
+                        display: 'flex',
+                        'justify-content': 'center',
+                        'margin-bottom': '1rem',
+                        'margin-left': '5rem',
+                        cursor: 'pointer',
+                        'background-color': getProductsFavorite(item.id)
+                          ? '#FFF5FD'
+                          : 'transparent',
+                        padding: '.5rem',
+                        'border-radius': '100%'
+                      }"
+                    >
+                    <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    (click)="addTreatmentsToFavorite(item.id); $event.stopPropagation();"
+                    *ngIf="getProductsFavorite(item.id)"
+                  >
+                    <path
+                      d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                      fill="#99047A"
+                    />
+                  </svg>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    (click)="addTreatmentsToFavorite(item.id); $event.stopPropagation();"
+                    *ngIf="!getProductsFavorite(item.id)"
+                  >
+                    <path
+                      d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                      fill="#2b2b2b"
+                    />
+                  </svg>
+                    </div>
+                    <button
+                      class="products_card_button"
+                      (click)="addToCart(i)"
+                      *ngIf="item.quantity == 0"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div> </ng-template
+          >w
+        </ng-container>
+        <ng-container *ngFor="let item of productList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class=""
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div class="products_card" (click)="onProductDetail(item.id)">
+                <div
+                  class="products_card_img"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                ></div>
+                <div class="products_card_content">
+                  <div class="products_card_info">
+                    <p style="font-size: 1.2rem !important">
+                      {{
+                        item.name.length > 9
+                          ? (item.name | slice : 0 : 9) + "..."
+                          : item.name
+                      }}
+                    </p>
+
+                    <div class="d-flex align-item-center">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+
+                    <div class="products_card_info_pricing">
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <del style="color: red">
+                            <span
+                              *ngIf="util.currencySide == 'left'"
+                              style="font-size: 1.2rem"
+                            >
+                              {{ util.currencySymbol }}{{ item.original_price }}
+                            </span>
+                            <span
+                              *ngIf="util.currencySide == 'right'"
+                              style="font-size: 1.2rem"
+                              >{{ item.original_price
+                              }}{{ util.currencySymbol }}
+                            </span>
+                          </del>
+                        </h6>
+                      </div>
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'left'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ util.currencySymbol }}{{ item.sell_price }}
+                          </span>
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'right'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ item.sell_price }}{{ util.currencySymbol }}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div
+                      class="svg-area"
+                      style="
+                        display: flex;
+                        justify-content: right;
+                        margin-bottom: 1rem;
+                        margin-right: 1rem;
+                      "
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        (click)="addToFavorite(item.id)"
+                      >
+                        <path
+                          d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                          fill="#282828"
+                        />
+                      </svg>
+                    </div>
+                    <button
+                      class="products_card_button"
+                      (click)="addToCart(i)"
+                      *ngIf="item.quantity == 0"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngFor="let item of productList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class=""
+              style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div class="products_card" (click)="onProductDetail(item.id)">
+                <div
+                  class="products_card_img"
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                ></div>
+                <div class="products_card_content">
+                  <div class="products_card_info">
+                    <p style="font-size: 1.2rem !important">
+                      {{
+                        item.name.length > 9
+                          ? (item.name | slice : 0 : 9) + "..."
+                          : item.name
+                      }}
+                    </p>
+
+                    <div class="d-flex align-item-center">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="md"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                        {{ item.total_rating }}
+                      </h6>
+                    </div>
+
+                    <div class="products_card_info_pricing">
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <del style="color: red">
+                            <span
+                              *ngIf="util.currencySide == 'left'"
+                              style="font-size: 1.2rem"
+                            >
+                              {{ util.currencySymbol }}{{ item.original_price }}
+                            </span>
+                            <span
+                              *ngIf="util.currencySide == 'right'"
+                              style="font-size: 1.2rem"
+                              >{{ item.original_price
+                              }}{{ util.currencySymbol }}
+                            </span>
+                          </del>
+                        </h6>
+                      </div>
+                      <div class="products_card_info_price">
+                        <h6 class="">
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'left'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ util.currencySymbol }}{{ item.sell_price }}
+                          </span>
+                          <span
+                            class="ff-medium head-text"
+                            *ngIf="util.currencySide == 'right'"
+                            style="font-size: 1.5rem"
+                          >
+                            {{ item.sell_price }}{{ util.currencySymbol }}
+                          </span>
+                        </h6>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-between;
+                    "
+                  >
+                    <div
+                      class="svg-area"
+                      style="
+                        display: flex;
+                        justify-content: right;
+                        margin-bottom: 1rem;
+                        margin-right: 1rem;
+                      "
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        (click)="addToFavorite(item.id)"
+                      >
+                        <path
+                          d="M12 21.6499C11.69 21.6499 11.39 21.6099 11.14 21.5199C7.32 20.2099 1.25 15.5599 1.25 8.68985C1.25 5.18985 4.08 2.34985 7.56 2.34985C9.25 2.34985 10.83 3.00985 12 4.18985C13.17 3.00985 14.75 2.34985 16.44 2.34985C19.92 2.34985 22.75 5.19985 22.75 8.68985C22.75 15.5699 16.68 20.2099 12.86 21.5199C12.61 21.6099 12.31 21.6499 12 21.6499ZM7.56 3.84985C4.91 3.84985 2.75 6.01985 2.75 8.68985C2.75 15.5199 9.32 19.3199 11.63 20.1099C11.81 20.1699 12.2 20.1699 12.38 20.1099C14.68 19.3199 21.26 15.5299 21.26 8.68985C21.26 6.01985 19.1 3.84985 16.45 3.84985C14.93 3.84985 13.52 4.55985 12.61 5.78985C12.33 6.16985 11.69 6.16985 11.41 5.78985C10.48 4.54985 9.08 3.84985 7.56 3.84985Z"
+                          fill="#282828"
+                        />
+                      </svg>
+                    </div>
+                    <button
+                      class="products_card_button"
+                      (click)="addToCart(i)"
+                      *ngIf="item.quantity == 0"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+
+    <!--  <div class="container shop-owl">
+      <owl-carousel-o [options]="shopSliderOptions">
+        <ng-container *ngFor="let item of productList; let i = index">
+          <ng-template carouselSlide>
+            <div
+              class="package-detail-img overflow-hidden"
+              style="max-width: 425px"
+            >
+              <div
+                [ngStyle]="{
+                  'background-image':
+                    'url(' +
+                    api.mediaURL +
+                    item.cover +
+                    '),url(assets/images/placeholder.jpg)'
+                }"
+                (click)="openProduct(item.id)"
+                class="package-img"
+              ></div>
+              <div class="d-flex flex-column p-3" style="gap: 10px">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="package-name">{{ item.name }}</div>
+                </div>
+                <div>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{
+                      color: item.rating >= 1 ? 'orange' : 'grey'
+                    }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{
+                      color: item.rating >= 2 ? 'orange' : 'grey'
+                    }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{
+                      color: item.rating >= 3 ? 'orange' : 'grey'
+                    }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{
+                      color: item.rating >= 4 ? 'orange' : 'grey'
+                    }"
+                  >
+                  </mdb-icon>
+                  <mdb-icon
+                    fas
+                    icon="star"
+                    size="sm"
+                    [ngStyle]="{
+                      color: item.rating >= 5 ? 'orange' : 'grey'
+                    }"
+                  >
+                  </mdb-icon>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="d-flex align-items-center">
+                    <div
+                      style="
+                        color: red;
+                        font-size: 14px;
+                        text-decoration: line-through;
+                        margin-right: 10px;
+                      "
+                    >
+                      {{ util.currencySymbol + "" + item.original_price }}
+                    </div>
+                    <div style="font-size: 20px; font-weight: bold">
+                      {{ util.currencySymbol + "" + item.sell_price }}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    mdbwaveseffect=""
+                    style="padding: 10px 16px"
+                    class="rounded text-white btn-color btn ng-star-inserted"
+                    (click)="addToCart(i)"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div> -->
+  </section>
+
+  <!-- Review -->
+  <!-- *ngIf="reviewList.length > 0 -->
+  <section
+    class="py-2 service-main-body mt-5"
+    *ngIf="util.deviceType != 'desktop' && reviewList.length > 0"
+  >
+    <div
+      class="review_container d-flex align-items-center justify-content-center gap-5 mb-4"
+      *ngIf="util.deviceType != 'desktop'"
+    >
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Our Reviews") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+
+    <div
+      class="review_container d-flex align-items-center justify-content-center gap-5 mb-4"
+      style="flex-direction: column"
+      *ngIf="util.deviceType == 'desktop'"
+    >
+      <div class="review_title">
+        <div class="review_title_principal">
+          <div class="line-bar"></div>
+          <p class="service-title">
+            {{ util.translate("Our Reviews") }}
+          </p>
+        </div>
+
+        <div class="div" style="padding: 1rem; padding-bottom: 1.5rem">
+          <p style="text-align: center; display: flex; font-size: 1rem">
+            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+            consectetur, adipisci velit, sed qu, consectetur
+          </p>
+        </div>
+      </div>
+
+      <div name="" id="" class="review_container_select">
+        <div
+          class=""
+          style="
+            display: flex;
+            border: 2px solid #d6d6d6;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.6rem;
+          "
+        >
+          <div
+            name=""
+            id=""
+            class="review_container_select_select"
+            (click)="optionsVisible = !optionsVisible"
+          >
+            {{ selectedReview }} Stars<svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M8.99989 12.6C8.47489 12.6 7.94989 12.3975 7.55239 12L2.66239 7.10998C2.44489 6.89248 2.44489 6.53248 2.66239 6.31498C2.87989 6.09748 3.23989 6.09748 3.45739 6.31498L8.34739 11.205C8.70739 11.565 9.29239 11.565 9.65239 11.205L14.5424 6.31498C14.7599 6.09748 15.1199 6.09748 15.3374 6.31498C15.5549 6.53248 15.5549 6.89248 15.3374 7.10998L10.4474 12C10.0499 12.3975 9.52489 12.6 8.99989 12.6Z"
+                fill="#686868"
+              />
+            </svg>
+
+            <div class="review_container_select_options" *ngIf="optionsVisible">
+              <div (click)="selectValue(5)">5 Stars</div>
+              <div (click)="selectValue(4)">4 Stars</div>
+              <div (click)="selectValue(3)">3 Stars</div>
+              <div (click)="selectValue(2)">2 Stars</div>
+              <div (click)="selectValue(1)">1 Star</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container shopping-owl" style="width: 100%">
+      <owl-carousel-o [options]="serviceOptions">
+        <ng-container *ngFor="let item of [1, 2, 3, 4]">
+          <ng-template carouselSlide>
+            <div
+              class="review_container_card"
+              style="
+                background-image: url(assets/svg/quote.svg);
+                background-repeat: no-repeat;
+                background-position: 0.5rem 0;
+              "
+            >
+              <div class="review_container_card_title">
+                <p>
+                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                  amet sint. Velit officia gat duis enim velit mollit.
+                </p>
+              </div>
+
+              <div class="review_container_card_info">
+                <img src="assets/imgs/man.png" alt="" srcset="" />
+                <div class="review_container_card_content">
+                  <p>Vikram jit Singh</p>
+
+                  <div class="review_container_card_content_rating">
+                    <p>5.0</p>
+
+                    <div class="d-flex align-item-center" style="gap: 0.5rem">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+
+    <div class="container nearby-owl" *ngIf="reviewList.length > 0">
+      <owl-carousel-o [options]="nearbySliderOptions">
+        <ng-container *ngFor="let item of reviewList">
+          <ng-template carouselSlide>
+            <div class="overflow-hidden" style="max-width: 425px">
+              <div class="d-flex flex-column p-3" style="gap: 10px">
+                <img src="../../../assets/svg/review.svg" style="width: 50px" />
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="package-description">{{ item.notes }}</div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img
+                    [src]="api.mediaURL + item.user.cover"
+                    style="
+                      width: 80px;
+                      height: 80px;
+                      border-radius: 50%;
+                      margin-right: 10px;
+                    "
+                  />
+                  <div class="d-flex flex-column">
+                    <div class="package-name">
+                      {{ item.user.first_name + " " + item.user.last_name }}
+                    </div>
+                    <div>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+  </section>
+
+  <section
+    class="container py-2 service-main-body"
+    *ngIf="util.deviceType == 'desktop' && reviewList.length > 0"
+    style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 8rem;
+    "
+  >
+    <div
+      class="review_container d-flex align-items-center gap-5 mb-4"
+      style="flex-direction: column"
+      *ngIf="util.deviceType == 'desktop'"
+    >
+      <div class="review_title">
+        <div class="review_title_principal">
+          <div class="line-bar" style="margin: 0; margin-right: 0.8rem"></div>
+          <p class="service-title">
+            {{ util.translate("Our Reviews") }}
+          </p>
+        </div>
+
+        <p style="display: flex; font-size: 1rem; width: 60%">
+          Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
+          consectetur, adipisci velit, sed qu, consectetur
+        </p>
+
+        <div name="" id="" class="review_container_select">
+          <div
+            class=""
+            style="
+              display: flex;
+              border: 2px solid #d6d6d6;
+              gap: 0.5rem;
+              align-items: center;
+              padding: 0.5rem 1rem;
+              border-radius: 0.6rem;
+            "
+          >
+            <div
+              name=""
+              id=""
+              class="review_container_select_select"
+              (click)="optionsVisible = !optionsVisible"
+            >
+              {{ selectedReview }} Stars<svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.99989 12.6C8.47489 12.6 7.94989 12.3975 7.55239 12L2.66239 7.10998C2.44489 6.89248 2.44489 6.53248 2.66239 6.31498C2.87989 6.09748 3.23989 6.09748 3.45739 6.31498L8.34739 11.205C8.70739 11.565 9.29239 11.565 9.65239 11.205L14.5424 6.31498C14.7599 6.09748 15.1199 6.09748 15.3374 6.31498C15.5549 6.53248 15.5549 6.89248 15.3374 7.10998L10.4474 12C10.0499 12.3975 9.52489 12.6 8.99989 12.6Z"
+                  fill="#686868"
+                />
+              </svg>
+
+              <div
+                class="review_container_select_options"
+                *ngIf="optionsVisible"
+              >
+                <div (click)="selectValue(5)" style="padding: 0.5rem">
+                  5 Stars
+                </div>
+                <div (click)="selectValue(4)" style="padding: 0.5rem">
+                  4 Stars
+                </div>
+                <div (click)="selectValue(3)" style="padding: 0.5rem">
+                  3 Stars
+                </div>
+                <div (click)="selectValue(2)" style="padding: 0.5rem">
+                  2 Stars
+                </div>
+                <div (click)="selectValue(1)" style="padding: 0.5rem">
+                  1 Star
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container shopping-owl" style="width: 55%">
+      <owl-carousel-o [options]="reviewOptions">
+        <ng-container *ngFor="let item of [1, 2, 3, 4]">
+          <ng-template carouselSlide>
+            <div
+              class="review_container_card"
+              style="
+                background-image: url(assets/svg/quote.svg);
+                background-repeat: no-repeat;
+                background-position: 0.5rem 0;
+              "
+            >
+              <div class="review_container_card_title">
+                <p>
+                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+                  amet sint. Velit officia gat duis enim velit mollit.
+                </p>
+              </div>
+
+              <div class="review_container_card_info">
+                <img src="assets/imgs/man.png" alt="" srcset="" />
+                <div class="review_container_card_content">
+                  <p>Vikram jit Singh</p>
+
+                  <div class="review_container_card_content_rating">
+                    <p>5.0</p>
+
+                    <div class="d-flex align-item-center" style="gap: 0.5rem">
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: 'orange'
+                        }"
+                      >
+                      </mdb-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+
+    <div class="container nearby-owl" *ngIf="reviewList.length > 0">
+      <owl-carousel-o [options]="nearbySliderOptions">
+        <ng-container *ngFor="let item of reviewList">
+          <ng-template carouselSlide>
+            <div class="overflow-hidden" style="max-width: 425px">
+              <div class="d-flex flex-column p-3" style="gap: 10px">
+                <img src="../../../assets/svg/review.svg" style="width: 50px" />
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="package-description">{{ item.notes }}</div>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                  <img
+                    [src]="api.mediaURL + item.user.cover"
+                    style="
+                      width: 80px;
+                      height: 80px;
+                      border-radius: 50%;
+                      margin-right: 10px;
+                    "
+                  />
+                  <div class="d-flex flex-column">
+                    <div class="package-name">
+                      {{ item.user.first_name + " " + item.user.last_name }}
+                    </div>
+                    <div>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 1 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 2 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 3 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 4 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                      <mdb-icon
+                        fas
+                        icon="star"
+                        size="sm"
+                        [ngStyle]="{
+                          color: item.rating >= 5 ? 'orange' : 'grey'
+                        }"
+                      >
+                      </mdb-icon>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="py-2 service-main-body mt-5" *ngIf="reviewList.length > 0">
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-5">
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Overview") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+    <div class="container">
+      <div class="row align-items-center" style="margin-top: 20px">
+        <div class="col-lg-12">
+          <div class="overview-container">
+            <div class="about-container">
+              <p
+                class="policy-title"
+                style="font-family: Poppins, sans-serif !important"
+              >
+                About
+              </p>
+              <p
+                class="policy-content rf-6 rf-xl-1"
+                style="font-family: Poppins, sans-serif !important"
+              >
+                {{ this.about }}
+              </p>
+              <p
+                class="policy-title rf-6 rf-xl-1"
+                style="font-family: Poppins, sans-serif !important"
+              >
+                Policy
+              </p>
+              <p
+                class="policy-content rf-6 rf-xl-1"
+                style="font-family: Poppins, sans-serif !important"
+              >
+                {{ this.policy }}
+              </p>
+            </div>
+            <div [class]="timing != '' ? 'timing-container' : ''">
+              <p class="policy-title rf-6 rf-xl-1">Opening Times</p>
+              <div
+                class="d-flex align-items-center"
+                *ngFor="let item of timing"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar.svg" />
+                <div
+                  style="
+                    width: 40%;
+                    text-align: start;
+                    font-family: Poppins, sans-serif !important;
+                  "
+                >
+                  {{ week[item.day] }}
+                </div>
+                <div
+                  style="
+                    text-align: start;
+                    font-family: Poppins, sans-serif !important;
+                  "
+                >
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ item.open_time }} AM - {{ item.close_time }} PM
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex contact-part">
+            <a [href]="getGoogleMapsUrl()" target="_blank"
+              ><img [src]="mapImage" alt="Google Map" style="width: 1278px"
+            /></a>
+            <!-- <div class="contact-info"> -->
+            <!-- <div class="d-flex ls-tight">
+                <mdb-icon
+                  fas
+                  icon="map-marker-alt"
+                  size="lg"
+                  style="color: black; margin-right: 10px"
+                >
+                </mdb-icon>
+                <h6 class="rf-6 rf-xl-1">{{ this.name }}</h6>
+              </div>
+              <h6
+                class="rf-6 rf-xl-1 pl-4 text-muted"
+                style="text-align: start"
+              >
+                {{ this.address }}
+              </h6> -->
+            <!-- <div class="d-flex" *ngIf="social != null && social != ''" style="padding: 20px;">
+                  <a *ngIf="social.facebook != null && social.facebook != ''" target="_blank" [href]="social.facebook" class="social-item"><img class="social-icon" src="assets/imgs/facebook.png"/></a>
+                  <a *ngIf="social.youtube != null && social.youtube != ''"  target="_blank" [href]="social.youtube" class="social-item"><img class="social-icon" src="assets/imgs/youtube.png"/></a>
+                  <a *ngIf="social.instagram != null && social.instagram != ''"  target="_blank" [href]="social.instagram" class="social-item"><img class="social-icon" src="assets/imgs/instagram.jpg"/></a>
+                  <a *ngIf="social.tiktok != null && social.tiktok != ''"  target="_blank" [href]="social.tiktok" class="social-item"><img class="social-icon" src="assets/imgs/tiktok.png"/></a>
+                </div> -->
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-2 service-main-body mt-5">
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-5">
+      <div class="line-bar"></div>
+      <p class="service-title">
+        {{ util.translate("Overview") }}
+      </p>
+      <div class="line-bar"></div>
+    </div>
+    <div class="container" *ngIf="util.deviceType != 'desktop'">
+      <div class="row align-items-center" style="margin-top: 20px">
+        <div class="col-lg-12">
+          <div class="overview_container_mobile overview-container">
+            <div class="about-container">
+              <p class="policy-title rf-6 rf-xl-1">About</p>
+              <p class="policy-content rf-6 rf-xl-1">
+                All about hair and make up with Salif Salony get the best trim
+                and hairstyles for your occasion. All about hair and make up
+                with Salif Salony get the best trim and hairstyles for your
+                occasion. All about hair and make up with Salif Salony get the
+                best trim and hairstyles for your occasion. All about hair and
+                make up with Salif Salony get the best trim and hairstyles for
+                your occasion.
+              </p>
+              <p class="policy-title rf-6 rf-xl-1">Policy</p>
+              <p class="policy-content rf-6 rf-xl-1">
+                Dear customer, Whether you’re new to payroll or just fancy a
+                refresher on reporting information and director’s payroll, join
+                our live webinars for the latest information and tips. If you
+                have any questions, you can ask them by using the on-screen text
+                box. Company directors – payroll and you We’ll be covering:
+              </p>
+            </div>
+
+            <div
+              style="
+                border: 1px solid #d6d6d6;
+                padding: 1.3rem;
+                border-radius: 12px;
+              "
+            >
+              <p class="policy-title rf-6 rf-xl-1" style="padding-left: 0.5rem">
+                Opening Times
+              </p>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[1] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[2] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[3] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[4] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[5] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[6] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+              <div
+                class="overview_container_mobile_dayofweek d-flex align-items-center"
+                style="padding: 5px"
+              >
+                <!-- <div class="opentiming-indicator"></div> -->
+                <img src="../../../assets/svg/calendar-pink.svg" />
+                <div style="width: 40%; text-align: start">
+                  {{ week[7] }}
+                </div>
+                <div style="text-align: start; gap: 0.5rem">
+                  <img src="../../../assets/svg/clock_pink.svg" />
+                  {{ "8:30 " }} AM - {{ "21:30" }} PM
+                </div>
+              </div>
+            </div>
+
+            <img src="assets/imgs/map.png" alt="" srcset="" id="mapScroll" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" *ngIf="util.deviceType == 'desktop'">
+      <div class="row align-items-center" style="margin-top: 20px">
+        <div class="col-lg-12">
+          <div class="overview_container_mobile overview-container">
+            <div class="d-flex">
+              <div class="about-container">
+                <p class="policy-title rf-6 rf-xl-1">About</p>
+                <p class="policy-content rf-6 rf-xl-1">
+                  All about hair and make up with Salif Salony get the best trim
+                  and hairstyles for your occasion. All about hair and make up
+                  with Salif Salony get the best trim and hairstyles for your
+                  occasion. All about hair and make up with Salif Salony get the
+                  best trim and hairstyles for your occasion. All about hair and
+                  make up with Salif Salony get the best trim and hairstyles for
+                  your occasion.
+                </p>
+                <p class="policy-title rf-6 rf-xl-1">Policy</p>
+                <p class="policy-content rf-6 rf-xl-1">
+                  Dear customer, Whether you’re new to payroll or just fancy a
+                  refresher on reporting information and director’s payroll,
+                  join our live webinars for the latest information and tips. If
+                  you have any questions, you can ask them by using the
+                  on-screen text box. Company directors – payroll and you We’ll
+                  be covering:
+                </p>
+              </div>
+
+              <div
+                style="
+                  border: 1px solid #d6d6d6;
+                  padding: 1.3rem;
+                  border-radius: 12px;
+                  width: 40%;
+                  margin-left: 1rem;
+                "
+              >
+                <p
+                  class="policy-title rf-6 rf-xl-1"
+                  style="padding-left: 0.5rem"
+                >
+                  Opening Times
+                </p>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[1] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[2] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[3] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[4] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[5] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[6] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+                <div
+                  class="overview_container_mobile_dayofweek d-flex align-items-center"
+                  style="padding: 5px"
+                >
+                  <!-- <div class="opentiming-indicator"></div> -->
+                  <img src="../../../assets/svg/calendar-pink.svg" />
+                  <div style="width: 40%; text-align: start">
+                    {{ week[7] }}
+                  </div>
+                  <div style="text-align: start; gap: 0.5rem">
+                    <img src="../../../assets/svg/clock_pink.svg" />
+                    {{ "8:30 " }} AM - {{ "21:30" }} PM
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <img
+              src="assets/imgs/desktop_map.png"
+              alt=""
+              srcset=""
+              id="mapScroll"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- nearby -->
+  <section class="py-2 service-main-body mt-5" *ngIf="nearSalons.length > 0">
+    <div class="d-flex align-items-center justify-content-center gap-5 mb-5">
+      <div class="line-bar-pink"></div>
+      <p class="service-title-pink">
+        {{ util.translate("Nearby Salons") }}
+      </p>
+      <div class="line-bar-pink"></div>
+    </div>
+
+    <div class="slider_row" *ngIf="util.deviceType != 'desktop'">
+      <div class="container package-owl" style="width: 100%">
+        <owl-carousel-o [options]="nearbySliderOptions">
+          <ng-container *ngFor="let item of nearSalons">
+            <ng-template carouselSlide>
+              <div
+                class=""
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <div class="salom_card" (click)="onSalon(item.uid, item.name)">
+                  <div
+                    class="salom_card_img"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.jpg)'
+                    }"
+                  ></div>
+                  <div class="salom_card_content">
+                    <p>
+                      {{
+                        item.name.length > 25
+                          ? (item.name | slice : 0 : 25) + "..."
+                          : item.name
+                      }}
+                    </p>
+                    <div class="" style="display: flex; align-items: center">
+                      <div class="salom_card_info">
+                        <div class="salom_card_subcategories">
+                          <span
+                            *ngFor="let cates of item.categories; let j = index"
+                          >
+                            {{ cates.name }}
+                            <span *ngIf="item.categories.length - 1 != j"
+                              >&</span
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class=""
+                          style="
+                            font-size: 14px;
+                            color: #555555;
+                            display: flex;
+                            gap: 0.5rem;
+                            font-family: Poppins, sans-serif !important;
+                          "
+                        >
+                          <mdb-icon
+                            fas
+                            icon="map-marker-alt"
+                            size="25"
+                            style="color: #99047a"
+                          >
+                          </mdb-icon>
+                          {{ item.address }}
+                        </div>
+
+                        <div class="d-flex" style="gap: 0.3rem">
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 1 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 2 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 3 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 4 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 5 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <h6
+                            class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1"
+                          >
+                            {{ item.total_rating }}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
+    </div>
+
+    <div class="slider_row" *ngIf="util.deviceType == 'desktop'">
+      <div class="container nearby-owl" style="width: 100%">
+        <owl-carousel-o
+          [options]="nearbySalom"
+          (dragging)="onCarrouselDrag($event.dragging)"
+        >
+          <ng-container *ngFor="let item of nearSalons">
+            <ng-template carouselSlide>
+              <div
+                class=""
+                style="
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                "
+              >
+                <div class="salom_card" (click)="onSalon(item.uid, item.name)">
+                  <div
+                    class="salom_card_img"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.jpg)'
+                    }"
+                  ></div>
+                  <div class="salom_card_content">
+                    <p>
+                      {{
+                        item.name.length > 25
+                          ? (item.name | slice : 0 : 25) + "..."
+                          : item.name
+                      }}
+                    </p>
+                    <div class="" style="display: flex; align-items: center">
+                      <div class="salom_card_info">
+                        <div class="salom_card_subcategories">
+                          <span
+                            *ngFor="let cates of item.categories; let j = index"
+                          >
+                            {{ cates.name }}
+                            <span *ngIf="item.categories.length - 1 != j"
+                              >&</span
+                            >
+                          </span>
+                        </div>
+                        <div
+                          class=""
+                          style="
+                            font-size: 14px;
+                            color: #555555;
+                            display: flex;
+                            gap: 0.5rem;
+                            font-family: Poppins, sans-serif !important;
+                          "
+                        >
+                          <mdb-icon
+                            fas
+                            icon="map-marker-alt"
+                            size="25"
+                            style="color: #99047a"
+                          >
+                          </mdb-icon>
+                          {{ item.address }}
+                        </div>
+
+                        <div class="d-flex" style="gap: 0.3rem">
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 1 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 2 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 3 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 4 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <mdb-icon
+                            fas
+                            icon="star"
+                            size="sm"
+                            [ngStyle]="{
+                              color: item.rating >= 5 ? 'orange' : 'grey'
+                            }"
+                          >
+                          </mdb-icon>
+                          <h6
+                            class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1"
+                          >
+                            {{ item.total_rating }}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+        </owl-carousel-o>
+      </div>
+    </div>
+
+    <!--    <div class="container nearby-owl">
+      <owl-carousel-o [options]="nearbySliderOptions">
+        <ng-container *ngFor="let item of nearSalons">
+          <ng-template carouselSlide>
+            <div class="px-0 rounded overflow-hidden shadow-sm animate">
+              <a class="text-dark" (click)="onSalon(item.uid, item.name)">
+                <div class="service-list pb-2">
+                  <div
+                    style="border-radius: 12px"
+                    [ngStyle]="{
+                      'background-image':
+                        'url(' +
+                        api.mediaURL +
+                        item.cover +
+                        '),url(assets/images/placeholder.png)'
+                    }"
+                    class="bg-img mb-3"
+                  ></div>
+                  <h6
+                    class="text-black ff-medium px-2 text-overflow salon-head-text"
+                  >
+                    {{ item.name }}
+                  </h6>
+
+                  <div class="px-2" style="font-size: 16px; color: #555555">
+                    <span *ngFor="let cates of item.categories; let j = index">
+                      {{ cates.name }}
+                      <span *ngIf="item.categories.length - 1 != j">,</span>
+                    </span>
+                  </div>
+
+                  <div class="px-2" style="font-size: 16px; color: #555555">
+                    {{ item.address }}
+                  </div>
+
+                  <div class="d-flex align-item-center mt-2 mb-2 px-2">
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 1 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 2 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 3 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 4 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <mdb-icon
+                      fas
+                      icon="star"
+                      size="sm"
+                      [ngStyle]="{
+                        color: item.rating >= 5 ? 'orange' : 'grey'
+                      }"
+                    >
+                    </mdb-icon>
+                    <h6 class="text-muted ff-medium pl-2 rf-6 m-0 rf-lg-1">
+                      {{ item.rating }} ( {{ item.total_rating }} )
+                    </h6>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </ng-template>
+        </ng-container>
+      </owl-carousel-o>
+    </div> -->
+  </section>
+  <!-- nearby -->
+</div>
+
+<div class="fixed_cart" *ngIf="serviceCart.totalItemInCart > 0">
+  <div class="container">
+    <div class="flex_cart">
+      <label class="subTotal"
+        >{{ util.translate("Your Services") }} ({{
+          serviceCart.totalItemInCart
+        }})
+      </label>
+      <div class="flxer">
+        <label class="subTotal" *ngIf="util.cside == 'left'"
+          >{{ util.translate("Subtotal") }}: {{ util.currecny }}
+          {{ serviceCart.totalPrice }}</label
+        >
+        <label class="subTotal" *ngIf="util.cside == 'right'"
+          >{{ util.translate("Subtotal") }}: {{ serviceCart.totalPrice
+          }}{{ util.currecny }}
+        </label>
+        <button mdbBtn class="place_btn" (click)="goToCheckout()">
+          {{ util.translate("Checkout") }}
+        </button>
+        <button mdbBtn class="place_btn" (click)="clearServiceCart()">
+          {{ util.translate("Clear") }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fixed_cart" *ngIf="productCart.cart?.length">
+  <div class="container">
+    <div class="flex_cart">
+      <label class="subTotal"
+        >{{ util.translate("Your Order") }} ({{ productCart.cart.length }})
+      </label>
+      <div class="flxer">
+        <label class="subTotal" *ngIf="util.cside == 'left'"
+          >{{ util.translate("Subtotal") }}: {{ util.currecny }}
+          {{ productCart.totalPrice }}</label
+        >
+        <label class="subTotal" *ngIf="util.cside == 'right'"
+          >{{ util.translate("Subtotal") }}: {{ productCart.totalPrice
+          }}{{ util.currecny }}
+        </label>
+        <button mdbBtn class="place_btn" (click)="goToProductCheckout()">
+          {{ util.translate("Checkout") }}
+        </button>
+        <button mdbBtn class="place_btn" (click)="clearProductCart()">
+          {{ util.translate("Clear") }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #serviceDetails="mdbModal"
+  class="modal fade right"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div
+    class="modal-dialog modal-full-height modal-right"
+    role="document"
+    style="margin: 0px; padding: 0px; height: 100%"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="serviceDetails.hide()"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">{{ serviceName }}</h4>
+      </div>
+      <div class="modal-body location_body" style="overflow: scroll">
+        <div
+          class="service-cart"
+          *ngFor="let item of servicesList; let i = index"
+        >
+          <div class="cart-items bg-white px-3 py-4 border-bottom">
+            <div class="d-flex align-items-center p-0">
+              <a
+                ><img
+                  [ngStyle]="{
+                    'background-image':
+                      'url(' +
+                      api.mediaURL +
+                      item.cover +
+                      '),url(assets/images/placeholder.jpg)'
+                  }"
+                  class="img-fluid"
+              /></a>
+              <a class="ml-3 text-dark text-decoration-none w-100">
+                <p class="head-text">{{ item.name }}</p>
+                <p class="sub-text">
+                  {{ item.duration }} {{ util.translate("Min.") }}
+                </p>
+
+                <div class="d-flex align-items-center">
+                  <p
+                    class="h6 sub-text small m-0 mr-3"
+                    *ngIf="item.off != null && item.off != 0"
+                  >
+                    <del>
+                      <span *ngIf="util.currencySide == 'left'">
+                        {{ util.currencySymbol }}{{ item.price }}
+                      </span>
+                      <span *ngIf="util.currencySide == 'right'">
+                        {{ item.price }}{{ util.currencySymbol }}
+                      </span>
+                    </del>
+                  </p>
+                  <p class="h6 f-primary m-0">
+                    <span
+                      class="ff-medium head-text"
+                      *ngIf="util.currencySide == 'left'"
+                      style="color: #000"
+                    >
+                      {{ util.currencySymbol
+                      }}{{
+                        item.off != null && item.off != 0
+                          ? item.off
+                          : item.price
+                      }}
+                    </span>
+                    <span
+                      class="ff-medium head-text"
+                      *ngIf="util.currencySide == 'right'"
+                      style="color: #000"
+                    >
+                      {{
+                        item.off != null && item.off != 0
+                          ? item.off
+                          : item.price
+                      }}{{ util.currencySymbol }}
+                    </span>
+                  </p>
+
+                  <div class="d-flex ml-auto">
+                    <i
+                      class="far fa-square"
+                      style="font-size: 2rem; color: gray"
+                      *ngIf="item.isChecked == false"
+                      (click)="addService(item, i)"
+                    ></i>
+                    <i
+                      class="far fa-check-square"
+                      style="font-size: 2rem; color: gray"
+                      *ngIf="item.isChecked == true"
+                      (click)="removeService(item, i)"
+                    ></i>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="modal-footer custome-footer"
+        *ngIf="serviceCart.totalItemInCart > 0"
+      >
+        <div class="footer-checkout" (click)="goToCheckout()">
+          <div>
+            {{ serviceCart.totalItemInCart }} {{ util.translate("Items") }}
+            {{ serviceCart.totalPrice }}
+          </div>
+          <div>
+            <p>{{ util.translate("Book Service") }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  mdbModal
+  #packageDetails="mdbModal"
+  class="modal fade right"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myBasicModalLabel"
+  aria-hidden="true"
+  style="z-index: 999999"
+>
+  <div
+    class="modal-dialog modal-full-height modal-right"
+    role="document"
+    style="margin: 0px; padding: 0px; height: 100%"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close pull-right"
+          aria-label="Close"
+          (click)="packageDetails.hide()"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">{{ packageName }}</h4>
+      </div>
+      <div class="modal-body location_body" style="overflow: scroll">
+        <div
+          class="package_cover"
+          [ngStyle]="{
+            'background-image':
+              'url(' +
+              api.mediaURL +
+              packageCover +
+              '),url(assets/images/placeholder.jpg)'
+          }"
+        ></div>
+        <h6 class="text-muted ff-medium pt-2 pb-2 rf-6 m-0 rf-lg-1">
+          {{ util.translate("Services Included") }}
+        </h6>
+        <div
+          *ngFor="let item of packageServices"
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 12px;
+          "
+        >
+          <p>{{ item.name }}</p>
+          <p>{{ item.price }}</p>
+        </div>
+
+        <h6 class="text-muted ff-medium pt-2 pb-2 rf-6 m-0 rf-lg-1">
+          {{ util.translate("Package Specialist") }}
+        </h6>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: start;
+            padding-top: 10px;
+            overflow: scroll;
+          "
+        >
+          <div *ngFor="let item of packageSpecialist" style="margin: 0px 5px">
+            <div
+              class="rounded-4 shadow-5 specialist"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  item.cover +
+                  '),url(assets/images/placeholder.jpg)'
+              }"
+            ></div>
+            <p
+              class="specialist_name"
+              style="font-family: Poppins, sans-serif !important"
+            >
+              {{ item.first_name }} <br />
+              {{ item.last_name }}
+            </p>
+          </div>
+        </div>
+
+        <div style="height: 30px"></div>
+
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 12px;
+          "
+        >
+          <p>{{ util.translate("Duration") }}</p>
+          <p>{{ packageDuration }} {{ util.translate("Min.") }}</p>
+        </div>
+
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            font-size: 12px;
+          "
+        >
+          <p>{{ util.translate("Price") }}</p>
+          <div style="display: flex; align-items: center">
+            <p class="h6 sub-text small m-0 mr-3" *ngIf="packageDiscount > 0">
+              <del>
+                <span
+                  *ngIf="util.currencySide == 'left'"
+                  class="ff-medium head-text"
+                >
+                  {{ util.currencySymbol }}{{ packagePrice }}
+                </span>
+                <span
+                  *ngIf="util.currencySide == 'right'"
+                  class="ff-medium head-text"
+                >
+                  {{ packagePrice }}{{ util.currencySymbol }}
+                </span>
+              </del>
+            </p>
+            <p class="h6 f-primary m-0">
+              <span
+                class="ff-medium head-text"
+                *ngIf="util.currencySide == 'left'"
+              >
+                {{ util.currencySymbol }}{{ packageOff }}
+              </span>
+              <span
+                class="ff-medium head-text"
+                *ngIf="util.currencySide == 'right'"
+              >
+                {{ packageOff }}{{ util.currencySymbol }}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <h6 class="text-muted ff-medium pt-2 pb-2 rf-6 m-0 rf-lg-1">
+          {{ util.translate("About") }}
+        </h6>
+        <p style="font-size: 12px">{{ packageDescriptions }}</p>
+
+        <h6 class="text-muted ff-medium pt-2 pb-2 rf-6 m-0 rf-lg-1">
+          {{ util.translate("Photos") }}
+        </h6>
+        <div class="row">
+          <div class="col-lg-4" *ngFor="let image of packageImages">
+            <div
+              class="packageGallery"
+              [ngStyle]="{
+                'background-image':
+                  'url(' +
+                  api.mediaURL +
+                  image +
+                  '),url(assets/images/placeholder.jpg)'
+              }"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer custome-footer">
+        <div
+          class="footer-checkout-package"
+          *ngIf="isBooked == false"
+          (click)="addPackage()"
+        >
+          <div style="font-family: Poppins, sans-serif !important">
+            {{ util.translate("Add Package") }}
+          </div>
+        </div>
+        <div
+          class="footer-checkout-package"
+          *ngIf="isBooked == true"
+          (click)="removePackage()"
+        >
+          <div>
+            {{ util.translate("Remove Package") }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

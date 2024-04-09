@@ -1,0 +1,12 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+ -->
+<app-headers *ngIf="util.deviceType !== 'mobile'"></app-headers>
+<app-mobile-header *ngIf="util.deviceType == 'mobile'"></app-mobile-header>
+
+<router-outlet> </router-outlet>

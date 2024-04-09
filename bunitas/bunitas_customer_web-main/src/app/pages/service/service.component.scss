@@ -1,0 +1,121 @@
+/*
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+*/
+
+/*
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Bunitas Salon Full App Flutter
+  This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2022-present initappz.
+*/
+.about {
+  margin-bottom: 20px !important;
+  text-align: start;
+}
+.slider_back_cate {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+}
+
+.slider_row {
+  margin-top: 20px;
+}
+
+.specialist {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  min-width: 50px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+}
+
+.rf-xl-1 {
+  font-size: 18px;
+}
+
+.rf-xl-2 {
+  font-size: 20px;
+}
+
+.specialist{
+  margin: auto !important;
+}
+
+.social-icon {
+  width: 40px;height: 40px;
+}
+
+.head-text {
+  text-align: initial;
+}
+
+.sub-text{
+  text-align: initial;
+}
+
+.user-img-tiny {
+  height: 150px;
+}
+
+.policy-title {
+  font-family: "medium";
+  text-align: start;
+}
+
+.policy-content {
+  text-align: start;
+  word-wrap: break-word;
+}
+
+.contact-part{
+  padding: 20px 15px;
+}
+
+.contact-info {
+  width: 100%;
+  padding: 25px;
+  background-color: #f3f3f3;
+}
+.social-item {
+  margin-right: 25px;
+}
+
+.review-total {
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,.2);
+  border: 1px solid rgba(0,0,0,.1);
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 0px 10px;
+}
+
+.review-individual {
+  margin: 10px 0px 20px 72px;
+}
+
+.fixed-short {
+  position: fixed;
+  bottom: 75px;
+  right: 5px;
+}
+
+.opentiming-indicator {
+  width: 12px;
+  height: 12px;
+  background-repeat: no-repeat;
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiI+PGNpcmNsZSBjeD0iMTc4IiBjeT0iNTM2IiByPSI2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTcyIC01MzApIiBmaWxsPSIjM2JhMTUwIi8+PC9zdmc+);
+  margin-right: 20px;
+}
